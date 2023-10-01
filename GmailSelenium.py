@@ -8,6 +8,7 @@ from urllib.request import urlopen
 from colored import fg, bg, attr  # pip install colored
 from selenium_authenticated_proxy import SeleniumAuthenticatedProxy
 import os
+import random, string
 # import undetected_chromedriver as uc
 class GmailSelenium:
     ref = None
@@ -29,18 +30,19 @@ class GmailSelenium:
         self.Phone = self.data[10]
         self.Address = self.data[11]
         self.City = self.data[12]
-        self.ZipCode = self.data[13] # mã quốc gia
-        self.Dob = self.data[14] # ngày tháng năm sinh
-        self.ACHRouting = self.data[15] # mã routing thẻ 
-        self.BankAccount = self.data[16] # Mã ngân hàng
-        self.CardNumber = self.data[17] # Mã thẻ
-        self.CardExpiredDay = self.data[18]
-        self.CardExpiredMoth = self.data[18]
-        self.CardCCV = self.data[19] # mã vissa
-        self.CardName = self.data[20] # Name of Card
-        try:self.Status = self.data[21] # Trạng thái
+        self.State = self.data[13] # mã quốc gia
+        self.ZipCode = self.data[14] # mã quốc gia
+        self.Dob = self.data[15] # ngày tháng năm sinh
+        self.ACHRouting = self.data[16] # mã routing thẻ 
+        self.BankAccount = self.data[17] # Mã ngân hàng
+        self.CardNumber = self.data[18] # Mã thẻ
+        self.CardExpiredDay = self.data[19]
+        self.CardExpiredMoth = self.data[20]
+        self.CardCCV = self.data[21] # mã vissa
+        self.CardName = self.data[22] # Name of Card
+        try:self.Status = self.data[23] # Trạng thái
         except:pass
-        try:self.CreatedDate = self.data[22] # Created Date
+        try:self.CreatedDate = self.data[24] # Created Date
         except:pass
         
     def login(self):
@@ -74,13 +76,15 @@ class GmailSelenium:
             time.sleep(2)
             try:
                 main_page = self.driver.current_window_handle
-
+    
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
-                time.sleep(2)
-                print('pass', )
-                self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
-                print('pass', )
-                time.sleep(2)
+                time.sleep(3)
+                try:
+                    self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
+                except:
+                    self.driver.find_element('xpath','/html/body/main/div/div/div/div/div[2]/form/div[3]/div[1]/div/button').click()
+                time.sleep(4)
+                
                 #popup sso google
                 # changing the handles to access login page
                 for handle in self.driver.window_handles:
@@ -90,7 +94,7 @@ class GmailSelenium:
                 self.driver.switch_to.window(login_page)
                 mail =  self.driver.find_element('xpath','//*[@id="view_container"]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div/div/ul/li[1]/div')
                 mail.click()
-                time.sleep(5)
+                time.sleep(6)
                 # change control to main page
                 self.driver.switch_to.window(main_page)
                 return True
@@ -99,42 +103,72 @@ class GmailSelenium:
         except:
             return False
 
+    def randomword(self, length):
+        letters = string.ascii_lowercase
+        return str(''.join(random.choice(letters) for i in range(length))).upper()
+
     def registerShopEasty(self):
-        self.driver.get("https://www.etsy.com/your/shops/y5ffeazxftjipy4t/onboarding/screener/welcome")
+        self.driver.get("https://www.etsy.com/your/shops/me/onboarding/preferences")
         time.sleep(3)
-        self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/a").click()
-        #pass info
         try:
-            time.sleep(0.5)
-            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/fieldset/div[1]/div/input").click()
-            time.sleep(0.5)
-            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/div/div/a[1]").click()
-            time.sleep(0.5)
-            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/fieldset/div/div[1]/div").click()
-            time.sleep(0.5)
-            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/fieldset/div/div[2]/div").click()
-            time.sleep(0.5)
-            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/div/div/a[2]").click()
+            #check passs if name created
+            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
+            time.sleep(2)
+            self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[4]/div/div[1]/button').click()
+            
+        except:
+            pass
+        #pass welcom
+        try:
+            self.driver.find_element('xpath','/html/body/main/div/div/div/div[3]/div/div[2]/div/div/a').click()
         except:
             pass
         #pass info
         try:
-            self.driver.get("https://www.etsy.com/your/shops/me/onboarding/preferences")
-            time.sleep(0.5)
-            self.driver.find_element('xpath',"/html/body/div[4]/div[3]/div[4]/div/div[1]/button").click()
-            time.sleep(0.5)
+            time.sleep(2)
+            self.driver.execute_script("arguments[0].click();", self.driver.find_element('id',"getting_started"))
+            time.sleep(2)
+            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/div/div/a[1]").click()
+            time.sleep(2)
+            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/fieldset/div/div[1]/div").click()
+            time.sleep(2)
+            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/fieldset/div/div[2]/div").click()
+            time.sleep(2)
+            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/div/div/a[2]").click()
+        except:
+            pass
+        #start your shop
+        try:
+            time.sleep(2)
+            self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/div/a").click()
+        except:
+            pass
+        try:
+            time.sleep(2)
+            self.driver.find_element('xpath',"/html/body/div[4]/div[3]/div[4]/div/div[2]/button").click()
+        except:
+            pass
+        #pass info
+        try:
             # enter name
-
-            nameShop = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[3]/div/div/div[2]/div/div/input")
-            nameShop.send_keys(f"{self.FirstName} {self.LastName} Shop")
-            self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[3]/div/div[1]/div/div/div[2]/button[2]").click()
+            try:
+                time.sleep(2)
+                nameShop = self.driver.find_element('id',"onboarding-shop-name-input")
+                nameShop.send_keys(f"{self.LastName}{self.randomword(2)}")
+                time.sleep(5)
+                self.driver.find_element('xpath',"/html/body/div[4]/div[3]/div[4]/div/div[2]/button").click()
+            except:
+                pass
+            time.sleep(1)
             #stock your photo shop
             uploadImages = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[3]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/form/input[2]")
-            uploadImages.send_keys(os.getcwd() + "/tests/sample_files/Figure1.tif")
+            #print('uploadImages')
+            uploadImages.send_keys(os.getcwd() + "/source-images/1.png")
             time.sleep(1)
-            titleShop = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[3]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/form/input[2]")
+            titleShop = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[6]/div[2]/div/div/div/div[2]/div/div/input")
             titleShop.send_keys(f"{self.FirstName} {self.LastName} Shop")
-            
+
+            print('pass titile')
             #options select
             select1 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[6]/div[4]/div/div/fieldset/div[2]/div/div[1]/div/div/div/select"))
             select1.select_by_index(2)         
@@ -142,37 +176,44 @@ class GmailSelenium:
             select1.select_by_index(2)          
             select1 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[6]/div[4]/div/div/fieldset/div[2]/div/div[3]/div/div/div/select"))
             select1.select_by_index(2)  
+            print('pass select suggestion')
             #xem lại không đúng
             category = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[6]/div[11]/div/div/div/div/div/div[2]/div/div/div/input")
             category.send_keys(f"Fashion, Souvenir, Modern, Trending")
-
+            print('pass categories')
             descriptionShop = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[6]/div[18]/div/div/div/div[2]/div[1]/div/textarea")
             descriptionShop.send_keys(f"{self.FirstName} {self.LastName} Shop")
+            print('pass descriptionShop')
 
+            time.sleep(1)
+            try:
+                self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','unlinked-profile'))
+            except:
+                pass
+                    
             price = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[8]/div/div/div/div[1]/div/div[1]/div/div/div/div[3]/div/div[1]/div/div[1]/input")
             price.send_keys(15)
-
+            
             zipCode = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/input")
             zipCode.send_keys(self.ZipCode)
-
+            print('pass zipcode')
             processTime = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div[1]/div[2]/div/div[1]/div[3]/div/div[2]/div/div[1]/select"))
             processTime.select_by_index(2)  
-
             #height uweight
             weight1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[1]/div/fieldset/div[2]/div/div[1]/div/input")
-            weight1.send_keys(self.ZipCode)
-            weight2 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[1]/div/fieldset/div[2]/div/div[2]/div/input")
-            weight2.send_keys(self.ZipCode)
+            weight1.send_keys(random.randrange(80, 100))
             height1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[1]/div/input")
-            height1.send_keys(random.randrange(80, 100))
+            height1.send_keys(random.randrange(1200, 1800))
             height2 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[2]/div/input")
-            weight2.send_keys(random.randrange(50, 80))
+            height2.send_keys(random.randrange(50, 80))
             height3 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[3]/div/input")
             height3.send_keys(random.randrange(120, 160))
-            self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[3]/div/div[1]/div/div/div[2]/button[2]").click()
-            time.sleep(5)
+            time.sleep(0.5)
+            #self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[3]/div/div[2]/div/div[2]/button").click()
+            time.sleep(50000)
         except:
             pass
+        time.sleep(50)
 
     def __SetProxy(self, options):
         try:
@@ -203,6 +244,7 @@ class GmailSelenium:
             loginEasty = self.loginEasty()
             if loginEasty == True:
                 self.ref.show.emit(self.index, 18, f"Login easty thành công")
+                time.sleep(5)
                 registerShop = self.registerShopEasty()
             else:
                 self.ref.show.emit(self.index, 18, f"Login easty thành công")
@@ -213,4 +255,5 @@ class GmailSelenium:
             self.ref.show.emit(self.index, 18, f"Login gmail thất bại")
             #self.ref.checksuccess.emit(False, self.index, self.mail, self.password)  
         #protected account
+        time.sleep(50)
         self.driver.quit()

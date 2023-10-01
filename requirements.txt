@@ -7,3 +7,4 @@ selenium
 undetected-chromedriver
 colored
 dload
+selenium_authenticated_proxy

@@ -213,6 +213,8 @@ class GmailTool(object):
                 
     def LoadHotMail(self):
         try:
+            self.index = 0
+            self.runCount = 0
             if len(self.LD_link.text()) <= 1 or not os.path.exists(self.LD_link.text()):
                 self.Mesagebox(text="Chọn file dữ liệu !")
             else:
