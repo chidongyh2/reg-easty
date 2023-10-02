@@ -1,3 +1,3 @@
-Proxy|proxy Port|proxy User|proxy Pass|Email|Passmail|Fname|Lname|ssn|dl|phone|add|city|state|zipcode|dob|ACH roughting number| Bank account number|card Number| Expriation month | Expriation day | CCV
-104.161.46.212|30668|proxy|39833e87|agustinejamis44@gmail.com|gialong1238|Frederic|Freeman|522589946|F655-2454-6268|1722|W. Roscoe #2|Chicago|IL|60657|7734779858|092046|121000248|71840000003054296|5293 6670 1748 7399|04|26|528
-104.161.46.212|30668|proxy|39833e87|amoyaizlynn73@gmail.com|gialong1237|Jay|Barnett|511723730|K00176069|240|East Walnut|Colby|KS|67701|7854622997|010274|121000248|71840000004993253|5293 6629 9585 6038|04|26|314
+Proxy|proxy Port|proxy User|proxy Pass|Email|Passmail|Fname|Lname|ssn|dl|add|city|state|zipcode|phone|dob|ACH roughting number| Bank account number|card Number| Expriation month | Expriation day | CCV
+104.161.46.212|30668|proxy|39833e87|agustinejamis44@gmail.com|gialong1238|Frederic|Freeman|522589946|1722|W. Roscoe #2|Chicago|IL|60657|7734779858|092046|121000248|71840000003054296|5293 6670 1748 7399|04|26|528
+104.161.46.212|30668|proxy|39833e87|amoyaizlynn73@gmail.com|gialong1237|Jay|Barnett|511723730|240|East Walnut|Colby|KS|67701|7854622997|010274|121000248|71840000004993253|5293 6629 9585 6038|04|26|314

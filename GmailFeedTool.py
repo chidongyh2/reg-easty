@@ -157,15 +157,15 @@ class GmailTool(object):
         item = self.table_email.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "DL"))
         item = self.table_email.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Phone"))
-        item = self.table_email.horizontalHeaderItem(7)
         item.setText(_translate("MainWindow", "Address"))
-        item = self.table_email.horizontalHeaderItem(8)
+        item = self.table_email.horizontalHeaderItem(7)
         item.setText(_translate("MainWindow", "City"))
-        item = self.table_email.horizontalHeaderItem(9)
+        item = self.table_email.horizontalHeaderItem(8)
         item.setText(_translate("MainWindow", "State"))
-        item = self.table_email.horizontalHeaderItem(10)
+        item = self.table_email.horizontalHeaderItem(9)
         item.setText(_translate("MainWindow", "Zip code"))
+        item = self.table_email.horizontalHeaderItem(10)
+        item.setText(_translate("MainWindow", "Phone"))
         item = self.table_email.horizontalHeaderItem(11)
         item.setText(_translate("MainWindow", "Birthday"))
         item = self.table_email.horizontalHeaderItem(12)
@@ -189,6 +189,7 @@ class GmailTool(object):
         self.btn_check_live.setText(_translate("MainWindow", "Check Live"))
         self.btn_load.setText(_translate("MainWindow", "Load"))
 
+        self.runningJob = True
         self.indexsuccess = 0
         self.indexerror = 0
         self.listthread = []
@@ -225,7 +226,7 @@ class GmailTool(object):
                     data.pop(0)
                     if data and len(data) > 0:
                         for mail in data:
-                            if mail and len(mail) > 0:
+                            if mail and len(mail) > 50:
                                 self.list_hostmail.append(str(mail).replace("\n", ""))
                         self.showAccounts()
         except Exception as e:
@@ -253,11 +254,11 @@ class GmailTool(object):
             self.ShowTable(i, 12, mail[16])
             self.ShowTable(i, 13, mail[17])
             self.ShowTable(i, 14, mail[18])
-            self.ShowTable(i, 15, mail[19])
-            self.ShowTable(i, 16, mail[20])
+            self.ShowTable(i, 15, f"{mail[19]}/{mail[20]}")
+            self.ShowTable(i, 16, mail[21])
             try:
-                self.ShowTable(i, 17, mail[21])
-                self.ShowTable(i, 18, mail[22])
+                self.ShowTable(i, 17, mail[22])
+                self.ShowTable(i, 18, mail[23])
             except:pass
             i += 1                
 
@@ -291,15 +292,26 @@ class GmailTool(object):
         self.runCount -= 1
         self.StartReg()
 
+    def retriveTableData(self):
+        model = self.table_email.model()
+        data = []
+        for row in range(model.rowCount()):
+            data.append([])
+            for column in range(model.columnCount()):
+                index = model.index(row, column)
+                # We suppose data are strings
+                data[row].append(str(model.data(index).toString()))
+        return data
+    
     def ActionStop(self):
         self.runningJob = False
         
     def StartReg(self):
         if self.btn_start.text() == "Start":
-            print('self.index', self.index)
+            self.runningJob = True
             if len(self.list_hostmail) > self.index:
                 for vm in self.list_hostmail:
-                    if self.runCount < int(self.threadCount.text())  and len(self.list_hostmail) > self.index:
+                    if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
                         data = self.list_hostmail[self.index]
                         self.threadreg = StartQ(self, self.index, data)
                         self.threadreg.start()
@@ -310,7 +322,24 @@ class GmailTool(object):
                         self.runCount += 1
                         time.sleep(1)
                         print('self', self.index, self.runCount)
-              
+
+    def VerifyBank(self):
+        if self.btn_start.text() == "Start":
+            self.runningJob = True
+            if len(self.list_hostmail) > self.index:
+                for vm in self.list_hostmail:
+                    if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
+                        data = self.list_hostmail[self.index]
+                        self.threadreg = StartQ(self, self.index, data)
+                        self.threadreg.start()
+                        self.threadreg.show.connect(self.ShowTable)
+                        self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
+                        self.listthread.append(self.threadreg)
+                        self.index += 1
+                        self.runCount += 1
+                        time.sleep(1)
+                        print('self', self.index, self.runCount)  
+
         else:
             for thread in self.listthread: thread.Stop()
             self.btn_start.setText('Start')

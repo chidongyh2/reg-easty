@@ -248,11 +248,6 @@
       </column>
       <column>
        <property name="text">
-        <string>Phone</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
         <string>Address</string>
        </property>
       </column>
@@ -269,6 +264,11 @@
       <column>
        <property name="text">
         <string>Zip code</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Phone</string>
        </property>
       </column>
       <column>
