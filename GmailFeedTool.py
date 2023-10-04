@@ -1,6 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from GmailSelenium import GmailSelenium
 import os, time, subprocess
+
+from VerrifyBankSelenium import VerifyBankSelenium
 class GmailTool(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -40,6 +42,10 @@ class GmailTool(object):
         self.hidden_chrome.setGeometry(QtCore.QRect(540, 20, 151, 20))
         self.hidden_chrome.setChecked(True)
         self.hidden_chrome.setObjectName("hidden_chrome")
+        self.update_info_mail = QtWidgets.QCheckBox(self.groupBox_2)
+        self.update_info_mail.setGeometry(QtCore.QRect(660, 20, 151, 20))
+        self.update_info_mail.setChecked(True)
+        self.update_info_mail.setObjectName("update_info_mail")
         self.tab_data = QtWidgets.QTabWidget(self.centralwidget)
         self.tab_data.setGeometry(QtCore.QRect(10, 130, 1051, 621))
         self.tab_data.setObjectName("tab_data")
@@ -64,7 +70,7 @@ class GmailTool(object):
         self.table_email.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.table_email.setShowGrid(True)
         self.table_email.setObjectName("table_email")
-        self.table_email.setColumnCount(19)
+        self.table_email.setColumnCount(20)
         self.table_email.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.table_email.setHorizontalHeaderItem(0, item)
@@ -104,6 +110,8 @@ class GmailTool(object):
         self.table_email.setHorizontalHeaderItem(17, item)
         item = QtWidgets.QTableWidgetItem()
         self.table_email.setHorizontalHeaderItem(18, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.table_email.setHorizontalHeaderItem(19, item)
         self.table_email.horizontalHeader().setDefaultSectionSize(170)
         self.table_email.verticalHeader().setStretchLastSection(True)
         self.tab_data.addTab(self.tab, "")
@@ -144,6 +152,7 @@ class GmailTool(object):
         self.thread_label_2.setText(_translate("MainWindow", "Path:"))
         self.delayLD_label.setText(_translate("MainWindow", "Delay:"))
         self.hidden_chrome.setText(_translate("MainWindow", "Ẩn trình duyệt"))
+        self.update_info_mail.setText(_translate("MainWindow", "Update info mail"))
         item = self.table_email.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Proxy"))
         item = self.table_email.horizontalHeaderItem(1)
@@ -179,17 +188,18 @@ class GmailTool(object):
         item = self.table_email.horizontalHeaderItem(16)
         item.setText(_translate("MainWindow", "Card Code"))
         item = self.table_email.horizontalHeaderItem(17)
-        item.setText(_translate("MainWindow", "Status"))
-        item = self.table_email.horizontalHeaderItem(18)
         item.setText(_translate("MainWindow", "Created Date"))
+        item = self.table_email.horizontalHeaderItem(18)
+        item.setText(_translate("MainWindow", "Verify Code"))
+        item = self.table_email.horizontalHeaderItem(19)
+        item.setText(_translate("MainWindow", "Status"))
         self.tab_data.setTabText(self.tab_data.indexOf(self.tab), _translate("MainWindow", "Mail tab"))
         self.btn_stop.setText(_translate("MainWindow", "Stop"))
         self.btn_start.setText(_translate("MainWindow", "Start"))
         self.btn_verify_bank.setText(_translate("MainWindow", "Verify Bank"))
         self.btn_check_live.setText(_translate("MainWindow", "Check Live"))
         self.btn_load.setText(_translate("MainWindow", "Load"))
-
-        self.runningJob = True
+        self.runningJob = False
         self.indexsuccess = 0
         self.indexerror = 0
         self.listthread = []
@@ -201,6 +211,7 @@ class GmailTool(object):
         self.btn_start.clicked.connect(self.StartReg)
         self.btn_LD_link.clicked.connect(self.FileDialogLD)
         self.btn_stop.clicked.connect(self.ActionStop)
+        self.btn_verify_bank.clicked.connect(self.VerifyBank)
 
     def closeEvent(self, event):
         sys.exit()
@@ -258,7 +269,7 @@ class GmailTool(object):
             self.ShowTable(i, 16, mail[21])
             try:
                 self.ShowTable(i, 17, mail[22])
-                self.ShowTable(i, 18, mail[23])
+                self.ShowTable(i, 19, mail[23])
             except:pass
             i += 1                
 
@@ -295,12 +306,13 @@ class GmailTool(object):
     def retriveTableData(self):
         model = self.table_email.model()
         data = []
+        print(model.rowCount())
         for row in range(model.rowCount()):
             data.append([])
             for column in range(model.columnCount()):
                 index = model.index(row, column)
                 # We suppose data are strings
-                data[row].append(str(model.data(index).toString()))
+                data[row].append(str(model.data(index)))
         return data
     
     def ActionStop(self):
@@ -313,7 +325,7 @@ class GmailTool(object):
                 for vm in self.list_hostmail:
                     if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
                         data = self.list_hostmail[self.index]
-                        self.threadreg = StartQ(self, self.index, data)
+                        self.threadreg = StartQ(self, self.index, data, self.hidden_chrome.isChecked(), self.update_info_mail.isChecked())
                         self.threadreg.start()
                         self.threadreg.show.connect(self.ShowTable)
                         self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
@@ -322,46 +334,69 @@ class GmailTool(object):
                         self.runCount += 1
                         time.sleep(1)
                         print('self', self.index, self.runCount)
+                self.runningJob == False
 
     def VerifyBank(self):
-        if self.btn_start.text() == "Start":
-            self.runningJob = True
+        if self.runningJob == False:
+            tableData = self.retriveTableData()
+            dataExcute = list(filter(lambda x: x[18] is not None and x[18] != 'None', tableData))
+            if len(dataExcute)  == 0:
+                self.Mesagebox(text="Không có mã code để thực hiện verify vui lòng cập nhật !")
+                return
             if len(self.list_hostmail) > self.index:
+                self.runningJob = True
                 for vm in self.list_hostmail:
-                    if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
-                        data = self.list_hostmail[self.index]
-                        self.threadreg = StartQ(self, self.index, data)
+                    #find item
+                    self.index += 1
+                    item = next((x for x in dataExcute if x[1] == str(vm).split("|")[4]), None)
+                    if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index - 1 and item is not None:
+                        data = self.list_hostmail[self.index - 1]
+                        self.threadreg = StartQVerify(self, self.index - 1, data, self.hidden_chrome.isChecked(), item[18])
                         self.threadreg.start()
                         self.threadreg.show.connect(self.ShowTable)
                         self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
-                        self.listthread.append(self.threadreg)
-                        self.index += 1
                         self.runCount += 1
                         time.sleep(1)
-                        print('self', self.index, self.runCount)  
-
-        else:
-            for thread in self.listthread: thread.Stop()
-            self.btn_start.setText('Start')
-
+                        print('self', self.index - 1, self.runCount)  
+                self.runningJob = False
 
 class StartQ(QtCore.QThread):
     delete = QtCore.pyqtSignal()
     show = QtCore.pyqtSignal(int, int, str)
     checkRegisterSuccess = QtCore.pyqtSignal(int, int, str)
-    checksuccess = QtCore.pyqtSignal(bool, int, str, str)
-    def __init__(self, ref, index, data) -> None:
+    checksuccess = QtCore.pyqtSignal(bool, int, str)
+    def __init__(self, ref, index, data, hiddenBrowser, changeInfoMail) -> None:
         super().__init__()
         self.ref = ref
         self.index = index
         self.data = data
+        self.hiddenBrowser = hiddenBrowser
+        self.changeInfoMail = changeInfoMail
 
     def run(self):
-        self.reg = GmailSelenium(self.index, self.data)
+        self.reg = GmailSelenium(self.index, self.data, self.hiddenBrowser, self.changeInfoMail)
         self.reg.ref = self
         self.reg.run()
         time.sleep(0.1)
 
+class StartQVerify(QtCore.QThread):
+    delete = QtCore.pyqtSignal()
+    show = QtCore.pyqtSignal(int, int, str)
+    checkRegisterSuccess = QtCore.pyqtSignal(int, int, str)
+    checksuccess = QtCore.pyqtSignal(bool, int, str)
+    def __init__(self, ref, index, data, hiddenBrowser, code) -> None:
+        super().__init__()
+        self.ref = ref
+        self.index = index
+        self.data = data
+        self.hiddenBrowser = hiddenBrowser
+        self.code = code
+
+    def run(self):
+        self.reg = VerifyBankSelenium(self.index, self.data, self.hiddenBrowser, self.code)
+        self.reg.ref = self
+        self.reg.run()
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     import sys

@@ -13,8 +13,10 @@ import random, string, datetime
 class VerifyBankSelenium:
     ref = None
     driver = None
-    def __init__(self, index: str, data: str):
+    def __init__(self, index: str, data: str, hiddenBrowser = False, code = None):
         super().__init__()
+        self.hiddenBrowser = hiddenBrowser
+        self.code = code
         self.data = data.split("|")
         self.index = index
         self.Proxy = self.data[0]
@@ -73,12 +75,12 @@ class VerifyBankSelenium:
     def loginEasty(self):
         try:
             self.driver.get("https://www.etsy.com/")
-            time.sleep(2)
+            time.sleep(3)
             try:
                 main_page = self.driver.current_window_handle
     
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
-                time.sleep(4)
+                time.sleep(6)
                 try:
                     self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
                 except:
@@ -102,7 +104,22 @@ class VerifyBankSelenium:
             return False
 
     def verifyBank(self):
-        time.sleep(2)
+        self.driver.get("https://www.etsy.com/your/shops/me/onboarding/payments")
+        time.sleep(5)
+        self.driver.execute_script("window.scrollTo(0, 800)")
+        try:
+            #enter deposit code
+            if self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button'):
+                self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button').click()
+                time.sleep(2)
+                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-1"))
+                self.driver.find_element('id','nonce-input').send_keys(self.BankAccount[1:4])
+                time.sleep(2)
+                self.driver.find_element('id','aut-button-button_one_tap').click()
+                time.sleep(3)
+                return True
+        except:
+            return False
 
     def randomword(self, length):
         letters = string.ascii_lowercase
@@ -129,25 +146,31 @@ class VerifyBankSelenium:
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
+        if self.hiddenBrowser == True:
+           options.add_argument("--headless")
         self.driver = webdriver.Chrome(options=options)
         #self.driver.delete_all_cookies()
         time.sleep(3)
         checkLogin = self.login() 
         if checkLogin == True:
-            self.ref.show.emit(self.index, 18, f"Login gmail thành công")
+            self.ref.show.emit(self.index, 19, f"Login gmail thành công")
             loginEasty = self.loginEasty()
             if loginEasty == True:
-                self.ref.show.emit(self.index, 18, f"Login easty thành công")
+                self.ref.show.emit(self.index, 19, f"Login easty thành công")
                 time.sleep(5)
-                registerShop = self.verifyBank()
+                verify = self.verifyBank()
+                if verify == True:
+                    self.ref.show.emit(self.index, 19, f"Verify Bank success !")
+                    self.ref.checksuccess.emit(True, self.index, "verify")
+                else: 
+                    self.ref.show.emit(self.index, 19, f"Verify Bank error !")
+                    self.ref.checksuccess.emit(False, self.index, "verify")
             else:
-                self.ref.show.emit(self.index, 18, f"Login easty thành công")
-            #self.ref.checksuccess.emit(True, self.index, self.mail, self.password)
-            
+                self.ref.show.emit(self.index, 19, f"Login easty thành công")
+                self.ref.checksuccess.emit(False, self.index, "verify")
 
         if checkLogin == False:
-            self.ref.show.emit(self.index, 18, f"Login gmail thất bại")
-            #self.ref.checksuccess.emit(False, self.index, self.mail, self.password)  
-        #protected account
+            self.ref.show.emit(self.index, 19, f"Login gmail thất bại")
+            self.ref.checksuccess.emit(False, self.index, "verify")
         time.sleep(50)
         self.driver.quit()
