@@ -217,6 +217,6 @@ class VerifyBankSelenium:
         if checkLogin == False:
             self.ref.show.emit(self.index, 19, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "verify")
-        time.sleep(3)
+        time.sleep(10)
         if self.hiddenBrowser == True:
             self.driver.quit()

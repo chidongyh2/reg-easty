@@ -1,0 +1,3 @@
+Proxy|proxy Port|proxy User|proxy Pass|Email|Passmail|Fname|Lname|ssn|dl|add|city|state|zipcode|phone|dob|ACH roughting number| Bank account number|card Number| Expriation month | Expriation day | CCV
+107.167.85.91|27320|proxy|262693dc|romaisarea20@gmail.com|gialong12336|john m|ruddell|103721961|2|farragut|palm coast|fl|32137|3863160509|42780|121000248|71840000003054296|5374921127022766|10|26|904
+

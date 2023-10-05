@@ -3,7 +3,7 @@ from GmailSelenium import GmailSelenium
 import os, time, subprocess
 import pathlib, random
 from VerrifyBankSelenium import VerifyBankSelenium
-class GmailTool(object):
+class EstyTool(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1069, 796)
@@ -471,7 +471,7 @@ if __name__ == "__main__":
     app.setStyle('Fusion')
     RegTikTok = QtWidgets.QMainWindow()
     RegTikTok.setWindowIcon(QtGui.QIcon('icon.ico'))
-    ui = GmailTool()
+    ui = EstyTool()
     ui.setupUi(RegTikTok)
     RegTikTok.show()
     sys.exit(app.exec_())
