@@ -106,20 +106,67 @@ class VerifyBankSelenium:
     def verifyBank(self):
         self.driver.get("https://www.etsy.com/your/shops/me/onboarding/payments")
         time.sleep(5)
-        self.driver.execute_script("window.scrollTo(0, 800)")
         try:
+            #check passs if name created
+            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
+            time.sleep(2)
+            self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[4]/div/div[1]/button').click()
+            time.sleep(2)
+            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[3]/div/div[1]/div/a[1]').click()
+            time.sleep(1)
+            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
+            time.sleep(1)
+        except:
+            pass
+        try:
+            self.driver.execute_script("window.scrollTo(0, 800)")
             #enter deposit code
             if self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button'):
                 self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button').click()
                 time.sleep(2)
                 self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-1"))
-                self.driver.find_element('id','nonce-input').send_keys(self.BankAccount[1:4])
+                self.driver.find_element('id','nonce-input').send_keys(self.code)
                 time.sleep(2)
                 self.driver.find_element('id','aut-button-button_one_tap').click()
                 time.sleep(3)
-                return True
         except:
-            return False
+            pass
+        try:
+            #setup billing
+            self.driver.find_element('xpath','/html/body/div[6]/div/div[1]/div/button').click()
+            time.sleep(1)
+            self.driver.find_element('id','billing-cc-num').send_keys(self.CardNumber)
+            month = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[5]/div[1]/div/select"))
+            month.select_by_value(str(int(self.CardExpiredDay)))
+            year = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[5]/div[2]/div/select"))
+            year.select_by_value(f"20{str(self.CardExpiredMoth)}") 
+            self.driver.find_element('id','billing-cc-ccv').send_keys(self.CardCCV)
+            self.driver.find_element('id','billing-name').send_keys(f"{self.FirstName} {self.LastName}")
+            country2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div[1]/select"))
+            country2.select_by_visible_text("United States") 
+            address = self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[3]/div/input')
+            address.send_keys(self.Address)
+            zipCode = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[5]/div[1]/input")
+            zipCode.send_keys(self.ZipCode)
+            city = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[5]/div[2]/input")
+            city.send_keys(self.City)
+            state = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[6]/div/div/div[1]/select"))
+            state.select_by_value(self.State)
+            phoneCode = self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[7]/div/input')
+            phoneCode.send_keys(self.Phone)
+            time.sleep(1)
+            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
+            time.sleep(5)
+        except:
+            pass
+
+        try:
+            self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/button').click()
+            time.sleep(1)
+            self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/div/div/div/button[3]').click()
+            self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[2]/div/div[1]/button').click()
+            return True
+        except:pass
 
     def randomword(self, length):
         letters = string.ascii_lowercase
@@ -146,8 +193,6 @@ class VerifyBankSelenium:
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
-        if self.hiddenBrowser == True:
-           options.add_argument("--headless")
         self.driver = webdriver.Chrome(options=options)
         #self.driver.delete_all_cookies()
         time.sleep(3)
@@ -166,11 +211,12 @@ class VerifyBankSelenium:
                     self.ref.show.emit(self.index, 19, f"Verify Bank error !")
                     self.ref.checksuccess.emit(False, self.index, "verify")
             else:
-                self.ref.show.emit(self.index, 19, f"Login easty thành công")
+                self.ref.show.emit(self.index, 19, f"Login easty lỗi")
                 self.ref.checksuccess.emit(False, self.index, "verify")
 
         if checkLogin == False:
             self.ref.show.emit(self.index, 19, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "verify")
-        time.sleep(50)
-        self.driver.quit()
+        time.sleep(3)
+        if self.hiddenBrowser == True:
+            self.driver.quit()

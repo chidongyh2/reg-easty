@@ -10,6 +10,7 @@ from colored import fg, bg, attr  # pip install colored
 from selenium_authenticated_proxy import SeleniumAuthenticatedProxy
 import os
 import random, string, datetime
+import pathlib
 # import undetected_chromedriver as uc
 class GmailSelenium:
     ref = None
@@ -187,7 +188,11 @@ class GmailSelenium:
             #stock your photo shop
             uploadImages = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[3]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/form/input[2]")
             #print('uploadImages')
-            uploadImages.send_keys(os.getcwd() + "/source-images/1.png")
+            #random images 
+            images = os.listdir('source-images')
+            imageName = images[random.randrange(0, len(images))]
+            imagePath = fr"{os.getcwd()}\source-images\{imageName}"
+            uploadImages.send_keys(imagePath)
             time.sleep(1)
             titleShop = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[6]/div[2]/div/div/div/div[2]/div/div/input")
             titleShop.send_keys(f"{self.FirstName} {self.LastName} Shop")
@@ -247,6 +252,9 @@ class GmailSelenium:
             print('passs day')
             self.driver.find_element('xpath','//*[@id="page-region"]/div/div/div[3]/div/div[1]/div/div/div[2]/button[2]').click()
             time.sleep(5)
+            try:
+                os.remove(imagePath)
+            except: pass
             try:
                 self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[3]/div/div[1]/div/a[1]').click()
             except:pass
@@ -402,8 +410,6 @@ class GmailSelenium:
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
-        if self.hiddenBrowser == True:
-           options.add_argument("--headless")
         self.driver = webdriver.Chrome(options=options)
         #self.driver.delete_all_cookies()
         time.sleep(3)
@@ -413,8 +419,8 @@ class GmailSelenium:
             if self.changeInfoMail == True:
                 changeinfo = self.changeMailInfo()
                 if changeinfo == False:
-                    self.ref.show.emit(self.index, 18, f"Change info mail thất bại vui Lòng kiểm tra lại !")
-                else:self.ref.show.emit(self.index, 18, f"Change info mail thành công !")
+                    self.ref.show.emit(self.index, 19, f"Change info mail thất bại vui Lòng kiểm tra lại !")
+                else:self.ref.show.emit(self.index, 19, f"Change info mail thành công !")
             loginEasty = self.loginEasty()
             if loginEasty == True:
                 self.ref.show.emit(self.index, 19, f"Login easty thành công")
@@ -422,12 +428,14 @@ class GmailSelenium:
                 registerShop = self.registerShopEasty()
                 if registerShop == True:
                     self.ref.show.emit(self.index, 19, f"Đăng ký tài khoản esty thành công")
+                    self.ref.show.emit(self.index, 17, datetime.datetime.now())
                     self.ref.checksuccess.emit(True, self.index, "register")
+
                 else: 
                     self.ref.show.emit(self.index, 19, f"Đăng ký tài khoản không thành công vui lòng kiểm tra lại")
                     self.ref.checksuccess.emit(False, self.index, "register")
             else:
-                self.ref.show.emit(self.index, 19, f"Login easty thành công")
+                self.ref.show.emit(self.index, 19, f"Login easty thất bại")
                 self.ref.checksuccess.emit(False, self.index, "register")
 
 
@@ -435,5 +443,6 @@ class GmailSelenium:
             self.ref.show.emit(self.index, 19, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "register")  
         #protected account
-        time.sleep(50)
-        self.driver.quit()
+        time.sleep(3)
+        if self.hiddenBrowser == True:
+            self.driver.quit()

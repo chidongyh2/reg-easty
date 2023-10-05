@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from GmailSelenium import GmailSelenium
 import os, time, subprocess
-
+import pathlib, random
 from VerrifyBankSelenium import VerifyBankSelenium
 class GmailTool(object):
     def setupUi(self, MainWindow):
@@ -124,9 +124,6 @@ class GmailTool(object):
         self.btn_verify_bank = QtWidgets.QPushButton(self.centralwidget)
         self.btn_verify_bank.setGeometry(QtCore.QRect(190, 90, 71, 31))
         self.btn_verify_bank.setObjectName("btn_verify_bank")
-        self.btn_check_live = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_check_live.setGeometry(QtCore.QRect(270, 90, 71, 31))
-        self.btn_check_live.setObjectName("btn_check_live")
         self.btn_load = QtWidgets.QPushButton(self.centralwidget)
         self.btn_load.setGeometry(QtCore.QRect(10, 90, 51, 31))
         self.btn_load.setObjectName("btn_load")
@@ -215,7 +212,6 @@ class GmailTool(object):
         self.btn_stop.setText(_translate("MainWindow", "Stop"))
         self.btn_start.setText(_translate("MainWindow", "Start"))
         self.btn_verify_bank.setText(_translate("MainWindow", "Verify Bank"))
-        self.btn_check_live.setText(_translate("MainWindow", "Check Live"))
         self.btn_load.setText(_translate("MainWindow", "Load"))
         self.label.setText(_translate("MainWindow", "Thành công:"))
         self.label_2.setText(_translate("MainWindow", "Thất bại:"))
@@ -229,13 +225,15 @@ class GmailTool(object):
         self.listthread = []
         self.listAccountRunning = []
         self.list_hostmail = []
+        self.dataExcute = []
         self.runCount = 0
         self.index = 0
+        self.runType = 0
         self.btn_load.clicked.connect(self.LoadHotMail)
-        self.btn_start.clicked.connect(self.StartReg)
         self.btn_LD_link.clicked.connect(self.FileDialogLD)
         self.btn_stop.clicked.connect(self.ActionStop)
-        self.btn_verify_bank.clicked.connect(self.VerifyBank)
+        self.btn_start.clicked.connect(self.StartRegAction)
+        self.btn_verify_bank.clicked.connect(self.VerifyBankAction)
 
     def closeEvent(self, event):
         sys.exit()
@@ -321,16 +319,47 @@ class GmailTool(object):
     def ShowTable(self, row, column, text):
         self.table_email.setItem(row, column, QtWidgets.QTableWidgetItem(text))
         
-    def ChangeTextSuccessAndError(self, row, status):
+    def ChangeTextSuccessAndError(self, check, row, status):
         time.sleep(3)
-        self.ShowTable(row, 19, status)
+        if check == True:
+            self.indexsuccess += 1
+            self.label_success.setText(f"<p><span style=\" color:#00aa00;\"> {self.indexsuccess} </span></p>")
+        else:
+            self.indexerror += 1
+            self.label_error.setText(f"<p><span style=\" color:#ff0000;\"> {self.indexerror} </span></p>")
         self.runCount -= 1
-        self.StartReg()
+        if self.runType == 1:self.StartReg()
+        if self.runType == 2:self.VerifyBank()
+
+        if self.index == len(self.list_hostmail) and self.runType == 1:
+            self.runningJob = False
+            self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
+            dataSave = list(self.retriveTableData())
+            if os.path.exists(f'{self.LD_link.text().replace(".txt", "")}_finished.txt'):
+                os.remove(f'{self.LD_link.text().replace(".txt", "")}_finished.txt')
+            for data in dataSave:
+                str = ""
+                for i in data:
+                    if len(str) > 0:str += f"|{i}"
+                    else: str += i
+                open(f'{self.LD_link.text().replace(".txt", "")}_finished.txt', 'a+', encoding="utf-8").write("%s\n"%(str))
+
+        if self.index == len(self.dataExcute) and self.runType == 2:
+            self.runningJob = False
+            self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
+            dataSave = list(self.retriveTableData())
+            if os.path.exists(fr'{self.LD_link.text().replace(".txt", "")}_finished.txt'):
+                os.remove(fr'{self.LD_link.text().replace(".txt", "")}_finished.txt')
+            for data in dataSave:
+                str = ""
+                for i in data:
+                    if len(str) > 0:str += f"|{i}"
+                    else: str += i
+                open(f'{self.LD_link.text().replace(".txt", "")}_finished.txt', 'a+').write("%s\n"%(str))
 
     def retriveTableData(self):
         model = self.table_email.model()
         data = []
-        print(model.rowCount())
         for row in range(model.rowCount()):
             data.append([])
             for column in range(model.columnCount()):
@@ -341,48 +370,62 @@ class GmailTool(object):
     
     def ActionStop(self):
         self.runningJob = False
-        
-    def StartReg(self):
-        if self.btn_start.text() == "Start":
-            self.runningJob = True
-            if len(self.list_hostmail) > self.index:
-                for vm in self.list_hostmail:
-                    if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
-                        data = self.list_hostmail[self.index]
-                        self.threadreg = StartQ(self, self.index, data, self.hidden_chrome.isChecked(), self.update_info_mail.isChecked())
-                        self.threadreg.start()
-                        self.threadreg.show.connect(self.ShowTable)
-                        self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
-                        self.listthread.append(self.threadreg)
-                        self.index += 1
-                        self.runCount += 1
-                        time.sleep(1)
-                        print('self', self.index, self.runCount)
-                self.runningJob == False
-
-    def VerifyBank(self):
+    
+    def VerifyBankAction(self):
         if self.runningJob == False:
             tableData = self.retriveTableData()
-            dataExcute = list(filter(lambda x: x[18] is not None and x[18] != 'None', tableData))
-            if len(dataExcute)  == 0:
+            self.dataExcute = list(filter(lambda x: x[18] is not None and x[18] != 'None', tableData))
+            if len(self.dataExcute)  == 0:
                 self.Mesagebox(text="Không có mã code để thực hiện verify vui lòng cập nhật !")
                 return
-            if len(self.list_hostmail) > self.index:
-                self.runningJob = True
-                for vm in self.list_hostmail:
-                    #find item
+            self.runType = 2
+            self.index = 0
+            self.runCount = 0
+            self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
+            self.runningJob = True
+            self.VerifyBank()
+
+    def StartRegAction(self):
+        if self.runningJob == False:
+            self.runType = 1
+            self.index = 0
+            self.runCount = 0
+            self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
+            self.runningJob = True
+            self.StartReg()
+
+    def StartReg(self):
+        if len(self.list_hostmail) > self.index:
+            for vm in self.list_hostmail:
+                if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
+                    data = self.list_hostmail[self.index]
+                    self.threadreg = StartQ(self, self.index, data, self.hidden_chrome.isChecked(), self.update_info_mail.isChecked())
+                    self.threadreg.start()
+                    self.threadreg.show.connect(self.ShowTable)
+                    self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
+                    self.listthread.append(self.threadreg)
                     self.index += 1
-                    item = next((x for x in dataExcute if x[1] == str(vm).split("|")[4]), None)
-                    if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index - 1 and item is not None:
-                        data = self.list_hostmail[self.index - 1]
-                        self.threadreg = StartQVerify(self, self.index - 1, data, self.hidden_chrome.isChecked(), item[18])
-                        self.threadreg.start()
-                        self.threadreg.show.connect(self.ShowTable)
-                        self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
-                        self.runCount += 1
-                        time.sleep(1)
-                        print('self', self.index - 1, self.runCount)  
-                self.runningJob = False
+                    self.runCount += 1
+                    time.sleep(1)
+                    print('self', self.index, self.runCount)
+
+
+    def VerifyBank(self):
+        if len(self.list_hostmail) > self.index:
+            for vm in self.list_hostmail:
+                #find item
+                self.index += 1
+                item = next((x for x in self.dataExcute if x[1] == str(vm).split("|")[4]), None)
+                if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index - 1 and item is not None:
+                    data = self.list_hostmail[self.index - 1]
+                    self.threadreg = StartQVerify(self, self.index - 1, data, self.hidden_chrome.isChecked(), item[18])
+                    self.threadreg.start()
+                    self.threadreg.show.connect(self.ShowTable)
+                    self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
+                    self.runCount += 1
+                    time.sleep(1)
+                    print('self', self.index - 1, self.runCount)  
+
 
 class StartQ(QtCore.QThread):
     delete = QtCore.pyqtSignal()
