@@ -249,6 +249,8 @@ class EstyTool(object):
         try:
             self.index = 0
             self.runCount = 0
+            self.indexsuccess = 0
+            self.indexerror = 0
             if len(self.LD_link.text()) <= 1 or not os.path.exists(self.LD_link.text()):
                 self.Mesagebox(text="Chọn file dữ liệu !")
             else:
@@ -381,6 +383,8 @@ class EstyTool(object):
             self.runType = 2
             self.index = 0
             self.runCount = 0
+            self.indexsuccess = 0
+            self.indexerror = 0
             self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
             self.runningJob = True
             self.VerifyBank()
@@ -389,6 +393,8 @@ class EstyTool(object):
         if self.runningJob == False:
             self.runType = 1
             self.index = 0
+            self.indexsuccess = 0
+            self.indexerror = 0
             self.runCount = 0
             self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
             self.runningJob = True
