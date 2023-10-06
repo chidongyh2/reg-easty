@@ -4,6 +4,8 @@ import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import ActionChains
 import pickle
 from urllib.request import urlopen
@@ -310,16 +312,13 @@ class GmailSelenium:
             zipCode.send_keys(self.ZipCode)
             time.sleep(1)
             self.driver.find_element('id',"processing_time_select").click()
-            time.sleep(15)
+            time.sleep(1)
             self.driver.find_element('id',"processing_time_select").click()
             processTime = Select(self.driver.find_element('id',"processing_time_select"))
             processTime.select_by_index(3) 
             time.sleep(1)
-            print("pass here")
-            self.driver.find_element('id',"consolidated_shipping_service_0").click()
             shipping1 = Select(self.driver.find_element('id',"consolidated_shipping_service_0"))
             shipping1.select_by_index(2) 
-            print("pass here", shipping1)
             self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[6]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]/div/div[2]/div[1]/select").click()
             shipping2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[6]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]/div/div[2]/div[1]/select"))
             shipping2.select_by_index(2) 
@@ -344,6 +343,112 @@ class GmailSelenium:
             except:pass
             time.sleep(2)
         except:
+            try:
+                time.sleep(3)
+                try:
+                    wait = WebDriverWait(self.driver, 3)
+                    wait.until(EC.alert_is_present())
+                    print("Alert accepted")
+                except:
+                    print("no Alert found")
+                processTime = Select(self.driver.find_element('id',"processing_time_select"))
+                processTime.select_by_index(3) 
+                shipping1 = Select(self.driver.find_element('id',"consolidated_shipping_service_0"))
+                shipping1.select_by_index(2) 
+                self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[6]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]/div/div[2]/div[1]/select").click()
+                shipping2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[6]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]/div/div[2]/div[1]/select"))
+                shipping2.select_by_index(2) 
+                #self.driver.execute_script("arguments[0].click();", self.driver.find_element('xpath','/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[5]/div/div[2]/div[1]/label/input'))
+                #height uweight
+                weight1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[1]/div/fieldset/div[2]/div/div[1]/div/input")
+                weight1.send_keys(random.randrange(80, 100))
+                height1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[1]/div/input")
+                height1.send_keys(random.randrange(1200, 1800))
+                height2 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[2]/div/input")
+                height2.send_keys(random.randrange(50, 80))
+                height3 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[3]/div/input")
+                height3.send_keys(random.randrange(120, 160))
+                self.driver.find_element('xpath','//*[@id="page-region"]/div/div/div[3]/div/div[1]/div/div/div[2]/button[2]').click()
+            except:
+                try:
+                    try:
+                        time.sleep(2)
+                        wait = WebDriverWait(self.driver, 3)
+                        wait.until(EC.alert_is_present())
+                        print("Alert accepted")
+                    except:
+                        print("no Alert found")
+                    time.sleep(5)
+                    shipping1 = Select(self.driver.find_element('id',"consolidated_shipping_service_0"))
+                    shipping1.select_by_index(2) 
+                    shipping2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[6]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]/div/div[2]/div[1]/select"))
+                    shipping2.select_by_index(2) 
+                    #self.driver.execute_script("arguments[0].click();", self.driver.find_element('xpath','/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[5]/div/div[2]/div[1]/label/input'))
+                    #height uweight
+                    weight1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[1]/div/fieldset/div[2]/div/div[1]/div/input")
+                    weight1.send_keys(random.randrange(80, 100))
+                    height1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[1]/div/input")
+                    height1.send_keys(random.randrange(1200, 1800))
+                    height2 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[2]/div/input")
+                    height2.send_keys(random.randrange(50, 80))
+                    height3 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[3]/div/input")
+                    height3.send_keys(random.randrange(120, 160))
+                    self.driver.find_element('xpath','//*[@id="page-region"]/div/div/div[3]/div/div[1]/div/div/div[2]/button[2]').click()
+                except: 
+                    try:
+                        time.sleep(2)
+                        try:
+                            wait = WebDriverWait(self.driver, 3)
+                            wait.until(EC.alert_is_present())
+                            self.driver.switch_to.alert.accept()
+                            print("Alert accepted")
+                        except:
+                            print("no Alert found")
+                        shipping2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[6]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]/div/div[2]/div[1]/select"))
+                        shipping2.select_by_index(2) 
+                        #self.driver.execute_script("arguments[0].click();", self.driver.find_element('xpath','/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[5]/div/div[2]/div[1]/label/input'))
+                        #height uweight
+                        weight1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[1]/div/fieldset/div[2]/div/div[1]/div/input")
+                        weight1.send_keys(random.randrange(80, 100))
+                        height1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[1]/div/input")
+                        height1.send_keys(random.randrange(1200, 1800))
+                        height2 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[2]/div/input")
+                        height2.send_keys(random.randrange(50, 80))
+                        height3 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[3]/div/input")
+                        height3.send_keys(random.randrange(120, 160))
+                        self.driver.find_element('xpath','//*[@id="page-region"]/div/div/div[3]/div/div[1]/div/div/div[2]/button[2]').click()
+                    except:
+                        try:
+                            time.sleep(2)
+                            try:
+                                wait = WebDriverWait(self.driver, 3)
+                                wait.until(EC.alert_is_present())
+                                self.driver.switch_to.alert.accept()
+                                print("Alert accepted")
+                            except:
+                                print("no Alert found")
+                            # shipping2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[6]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]/div/div[2]/div[1]/select"))
+                            # shipping2.select_by_index(2) 
+                            #self.driver.execute_script("arguments[0].click();", self.driver.find_element('xpath','/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[1]/div/div/div[1]/div[3]/div/div[2]/div/div[2]/div/div[1]/div[5]/div/div[2]/div[1]/label/input'))
+                            #height uweight
+                            weight1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[1]/div/fieldset/div[2]/div/div[1]/div/input")
+                            weight1.send_keys(random.randrange(80, 100))
+                            height1 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[1]/div/input")
+                            height1.send_keys(random.randrange(1200, 1800))
+                            height2 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[2]/div/input")
+                            height2.send_keys(random.randrange(50, 80))
+                            height3 = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[12]/div/div/div[2]/div/div[2]/div/fieldset/div[2]/div/div[3]/div/input")
+                            height3.send_keys(random.randrange(120, 160))
+                            self.driver.find_element('xpath','//*[@id="page-region"]/div/div/div[3]/div/div[1]/div/div/div[2]/button[2]').click()
+                        except:
+                            print("xcept stock your photo shop shipping 4")
+                            pass
+                        print("xcept stock your photo shop shipping 3")
+                        pass
+                    print("xcept stock your photo shop shipping 2")
+                    pass
+                print("xcept stock your photo shop shipping")
+                pass
             print("except stock your photo shop")
             pass
 
@@ -495,6 +600,9 @@ class GmailSelenium:
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
+        options.add_argument("--disable-popup-blocking")
+        prefs = {"profile.default_content_setting_values.notifications" : 2}
+        options.add_experimental_option("prefs",prefs)
         self.driver = webdriver.Chrome(options=options)
         #self.driver.delete_all_cookies()
         time.sleep(3)
