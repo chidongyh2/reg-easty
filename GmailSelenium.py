@@ -106,7 +106,7 @@ class GmailSelenium:
                 main_page = self.driver.current_window_handle
     
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
-                time.sleep(6)
+                time.sleep(8)
                 try:
                     self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
                 except:
@@ -139,23 +139,23 @@ class GmailSelenium:
         try:
             #check passs if name created
             self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
-            time.sleep(2)
+            time.sleep(3)
             self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[4]/div/div[1]/button').click()
-            time.sleep(2)
+            time.sleep(3)
             self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[3]/div/div[1]/div/a[1]').click()
-            time.sleep(1)
+            time.sleep(3)
         except:
             pass
         #pass welcom
         try:
             self.driver.find_element('xpath','/html/body/main/div/div/div/div[3]/div/div[2]/div/div/a').click()
-            time.sleep(2)
+            time.sleep(3)
         except:
             pass
         #pass info
         try:
             self.driver.execute_script("arguments[0].click();", self.driver.find_element('id',"getting_started"))
-            time.sleep(2)
+            time.sleep(3)
             self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/div/div/a[1]").click()
             time.sleep(2)
             self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/fieldset/div/div[1]/div").click()
@@ -167,18 +167,20 @@ class GmailSelenium:
         except:
             print("error get started")
             pass
+        time.sleep(3)
         #start your shop
         try:
             self.driver.find_element('xpath',"/html/body/main/div/div/div/div[3]/div/div[2]/div/div/div/a").click()
-            time.sleep(2)
+            time.sleep(3)
         except:
             print("error start your shop")
             pass
+        time.sleep(3)   
         try:
-            self.driver.find_element('xpath',"/html/body/div[4]/div[3]/div[4]/div/div[2]/button").click()
-            time.sleep(2)
+            self.driver.find_element('xpath',"/html/body/div[4]/div[3]/div[4]/div/div[1]/button").click()
+            time.sleep(3)
         except:
-            print("error start your shop")
+            print("error start your shop 2")
             pass
 
         #pass info
@@ -249,11 +251,46 @@ class GmailSelenium:
                     time.sleep(3)
                     print('passs radio')
                 except: pass
+                try:
+                    if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                        self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                except:pass
                 self.driver.execute_script("window.scrollTo(0, 1800)")
-                self.driver.find_element('xpath','//*[@id="plaid-render-wrapper"]/button').click()
+                t = 0
+                while t <= 3:
+                    t += 1
+                    time.sleep(2)
+                    try:
+                        self.driver.find_element('xpath','//*[@id="plaid-render-wrapper"]/button').click()
+                        try:
+                            if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                                self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                        except:pass
+                    except:
+                        pass
                 time.sleep(10)
-                self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[3]/div/button').click()
+                try:
+                    if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                        self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                except:pass
+                time.sleep(1)
+                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
+                time.sleep(3)
+                print(self.driver.find_element('id','aut-button'))
+                self.driver.find_element('id','aut-button').click()
                 time.sleep(5)
+                try:
+                    self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
+                    time.sleep(2)
+                except:pass
+                try:
+                    if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                        self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                except:pass
+                try:
+                    self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
+                    time.sleep(2)
+                except:pass
                 try:
                     time.sleep(2)  
                     self.driver.find_element('xpath','/html/body/div[6]/div/div[1]/div/button').click()
@@ -344,7 +381,6 @@ class GmailSelenium:
         except:
             print("except stock your photo shop")
             pass
-        time.sleep(500)
         #pass bank info
         try:
             if self.driver.find_element('xpath',"/html/body/div[4]/div[16]/div/div/div[2]/div[3]/div/div/div[1]/div/h5").text.strip() == "Getting paid on Etsy":
@@ -402,83 +438,160 @@ class GmailSelenium:
                     time.sleep(3)
                     print('passs radio')
                 except: pass
+                try:
+                    if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                        self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                except:pass
                 self.driver.execute_script("window.scrollTo(0, 1800)")
-                self.driver.find_element('xpath','//*[@id="plaid-render-wrapper"]/button').click()
+                t = 0
+                while t <= 3:
+                    t += 1
+                    time.sleep(2)
+                    try:
+                        self.driver.find_element('xpath','//*[@id="plaid-render-wrapper"]/button').click()
+                        try:
+                            if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                                self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                        except:pass
+                    except:
+                        pass
                 time.sleep(10)
-                self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[3]/div/button').click()
+                try:
+                    if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                        self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                except:pass
+                time.sleep(1)
+                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
+                time.sleep(3)
+                print(self.driver.find_element('id','aut-button'))
+                #pass info bank
+                try:
+                    print("dzo hgere")
+                    #Routing
+                    self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
+                    self.driver.find_element('id','device-input').send_keys(self.ACHRouting)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #Account Number
+                    self.driver.find_element('id','account-number-input').send_keys(self.BankAccount)
+                    self.driver.find_element('id','account-number-confirmation').send_keys(self.BankAccount)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #Enter name
+                    self.driver.find_element('id','name-input').send_keys(f"{self.FirstName} {self.LastName}")
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #checking
+                    self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','account-type-checking'))
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #checking
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(3)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(5)
+                except:pass
+                #end bank infoo
+                self.driver.find_element('id','aut-button').click()
                 time.sleep(5)
+                try:
+                    self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
+                    time.sleep(2)
+                except:pass
+                try:
+                    if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
+                        self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
+                except:pass
+                try:
+                    self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
+                    time.sleep(2)
+                except:pass
                 try:
                     time.sleep(2)  
                     self.driver.find_element('xpath','/html/body/div[6]/div/div[1]/div/button').click()
                 except:pass
-                time.sleep(2)
-                time.sleep(50)
+                time.sleep(3)
         except:
             print("except info two")
             pass
-        time.sleep(50)
         #bypass ID upload
         try:
+            time.sleep(3)
             if self.driver.find_element('xpath',"/html/body/div[4]/div[15]/div/div/div/div[2]/div[2]/div/form/div[2]/h2").text.strip() == "Verify your ID":
+                self.driver.execute_script("window.scrollTo(0, 1800)")
                 national = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[15]/div/div/div/div[2]/div[2]/div/form/div[2]/div[1]/div[1]/div/select"))
                 national.select_by_visible_text("United States") 
                 type = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[15]/div/div/div/div[2]/div[2]/div/form/div[2]/div[1]/div[2]/div/select"))
                 type.select_by_value("Passport") 
                             #stock your photo shop
-                uploadImages = self.driver.find_element('xpath',"/html/body/div[4]/div[15]/div/div/div/div[2]/div[2]/div/form/div[2]/div[1]/div[3]/div/input")
+                uploadImages = self.driver.find_element('name',"secure-document-attachment")
                 #print('uploadImages')
                 uploadImages.send_keys(os.getcwd() + f"/source-ids/{self.SSN}.png")
-                time.sleep(1)
+                time.sleep(5)
                 self.driver.find_element('xpath',"/html/body/div[4]/div[15]/div/div/div/div[2]/div[2]/div/form/div[2]/div[2]/button").click()
-                time.sleep(50)
-                self.driver.find_element('xpath','/html/body/div[4]/div[17]/div/div[1]/div/button').click()
-                time.sleep(4)
-                self.driver.get("https://www.etsy.com/your/shops/me/onboarding/payments")
+                time.sleep(70)
+                print("qua 0")
+                try:
+                    self.driver.find_element('xpath','/html/body/div[4]/div[17]/div/div[1]/div/button').click()
+                except:pass
+                time.sleep(10)
+                print("qua 1 ")
+                #step check radio question and continute banking (check banking)
+                try:
+                    self.driver.get("https://www.etsy.com/your/shops/me/onboarding/payments")
+                    time.sleep(5)
+                    self.driver.execute_script("window.scrollTo(0, 800)")
+                    time.sleep(1)
+                    try:
+                        self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/button').click()
+                    except:
+                        pass
+                    time.sleep(8)
+                    print("today")
+                    try:
+                        try:
+                            if self.driver.find_element("id", "plaid-link-iframe-3"):
+                                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
+                        except:
+                            self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-1"))
+                    except:pass
+                    
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #add bank manual
+                    self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','flow-type-manual'))
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #Routing
+                    self.driver.find_element('id','device-input').send_keys(self.ACHRouting)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #Account Number
+                    self.driver.find_element('id','account-number-input').send_keys(self.BankAccount)
+                    self.driver.find_element('id','account-number-confirmation').send_keys(self.BankAccount)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #Enter name
+                    self.driver.find_element('id','name-input').send_keys(f"{self.FirstName} {self.LastName}")
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #checking
+                    self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','account-type-checking'))
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(1)
+                    #checking
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(3)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(5)
+                    return True
+                except:
+                    print("exxcep step check radio question and continute")
+                    return False
         except:
             print("except bypass ID upload")
             pass
-        #step check radio question and continute banking (check banking)
-        try:
-            #self.driver.get("https://www.etsy.com/your/shops/me/onboarding/payments")
-            time.sleep(3)
-            self.driver.execute_script("window.scrollTo(0, 800)")
-            time.sleep(1)
-            self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/button').click()
-            time.sleep(5)
-            print("today")
-            self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-1"))
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(1)
-            #add bank manual
-            self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','flow-type-manual'))
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(1)
-            #Routing
-            self.driver.find_element('id','device-input').send_keys(self.ACHRouting)
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(1)
-            #Account Number
-            self.driver.find_element('id','account-number-input').send_keys(self.BankAccount)
-            self.driver.find_element('id','account-number-confirmation').send_keys(self.BankAccount)
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(1)
-            #Enter name
-            self.driver.find_element('id','name-input').send_keys(f"{self.FirstName} {self.LastName}")
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(1)
-            #checking
-            self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','account-type-checking'))
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(1)
-            #checking
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(3)
-            self.driver.find_element('id','aut-button').click()
-            time.sleep(5)
-            return True
-        except:
-            print("exxcep step check radio question and continute")
-            return False
+
             
 
     def __SetProxy(self, options):

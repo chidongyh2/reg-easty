@@ -115,7 +115,7 @@ class VerifyBankSelenium:
             self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[3]/div/div[1]/div/a[1]').click()
             time.sleep(1)
             self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
-            time.sleep(1)
+            time.sleep(5)
         except:
             pass
         try:
@@ -128,7 +128,7 @@ class VerifyBankSelenium:
                 self.driver.find_element('id','nonce-input').send_keys(self.code)
                 time.sleep(2)
                 self.driver.find_element('id','aut-button-button_one_tap').click()
-                time.sleep(3)
+                time.sleep(5)
         except:
             pass
         try:
@@ -162,7 +162,7 @@ class VerifyBankSelenium:
 
         try:
             self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/button').click()
-            time.sleep(1)
+            time.sleep(3)
             self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/div/div/div/button[3]').click()
             self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[2]/div/div[1]/button').click()
             return True
@@ -195,7 +195,7 @@ class VerifyBankSelenium:
         options.add_experimental_option("excludeSwitches", ["enable automation"])
         self.driver = webdriver.Chrome(options=options)
         #self.driver.delete_all_cookies()
-        time.sleep(3)
+        time.sleep(5)
         checkLogin = self.login() 
         if checkLogin == True:
             self.ref.show.emit(self.index, 19, f"Login gmail thành công")
