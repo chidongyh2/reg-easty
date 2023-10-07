@@ -195,10 +195,11 @@ class GmailSelenium:
             pass
 
         #pass bank info first
+       #pass bank info
         try:
-            time.sleep(2)
-            #select country
             if self.driver.find_element('xpath',"/html/body/div[4]/div[16]/div/div/div[2]/div[3]/div/div/div[1]/div/h5").text.strip() == "Getting paid on Etsy":
+                time.sleep(2)
+                #select country
                 country1 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[16]/div/div/div[2]/div[3]/div/div/div[2]/div[3]/select"))
                 country1.select_by_visible_text("United States") 
                 country2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/div[2]/div[2]/div/select"))
@@ -273,15 +274,47 @@ class GmailSelenium:
                     if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
                         self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
                 except:pass
-                time.sleep(1)
-                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
                 time.sleep(3)
-                print(self.driver.find_element('id','aut-button'))
-                self.driver.find_element('id','aut-button').click()
+                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
                 time.sleep(5)
+                self.driver.find_element('id','aut-button').click()
+                #pass info bank
+                try:
+                    time.sleep(3)
+                    print("dzo hgere")
+                    try:
+                        #add bank manual
+                        self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','flow-type-manual'))
+                        self.driver.find_element('id','aut-button').click()
+                    except:pass
+                    time.sleep(3)
+                    #Routing
+                    self.driver.find_element('id','device-input').send_keys(self.ACHRouting)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(3)
+                    #Account Number
+                    self.driver.find_element('id','account-number-input').send_keys(self.BankAccount)
+                    self.driver.find_element('id','account-number-confirmation').send_keys(self.BankAccount)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(3)
+                    #Enter name
+                    self.driver.find_element('id','name-input').send_keys(f"{self.FirstName} {self.LastName}")
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(3)
+                    #checking
+                    self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','account-type-checking'))
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(3)
+                    #checking
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(3)
+                    self.driver.find_element('id','aut-button').click()
+                    time.sleep(5)
+                except:pass
+                #end bank infoo
                 try:
                     self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
-                    time.sleep(2)
+                    time.sleep(3)
                 except:pass
                 try:
                     if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
@@ -289,18 +322,17 @@ class GmailSelenium:
                 except:pass
                 try:
                     self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
-                    time.sleep(2)
+                    time.sleep(3)
                 except:pass
                 try:
-                    time.sleep(2)  
+                    time.sleep(3)  
                     self.driver.find_element('xpath','/html/body/div[6]/div/div[1]/div/button').click()
                 except:pass
-                time.sleep(2)
-                time.sleep(50)
+                time.sleep(3)
         except:
             print("except info first")
             pass
-        #bypass ID upload
+        # stock your photo shop
         try:
             #stock your photo shop
             uploadImages = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/section/div/div[4]/div/div/div/div[2]/div/div/div/div[3]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/form/input[2]")
@@ -460,11 +492,10 @@ class GmailSelenium:
                     if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
                         self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[5]/div[2]/div[1]/h5').click()
                 except:pass
-                time.sleep(1)
-                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
                 time.sleep(3)
+                self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
+                time.sleep(5)
                 self.driver.find_element('id','aut-button').click()
-                print(self.driver.find_element('id','aut-button'))
                 #pass info bank
                 try:
                     time.sleep(3)
@@ -474,25 +505,24 @@ class GmailSelenium:
                         self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','flow-type-manual'))
                         self.driver.find_element('id','aut-button').click()
                     except:pass
-                    time.sleep(2)
+                    time.sleep(3)
                     #Routing
-                    self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
                     self.driver.find_element('id','device-input').send_keys(self.ACHRouting)
                     self.driver.find_element('id','aut-button').click()
-                    time.sleep(1)
+                    time.sleep(3)
                     #Account Number
                     self.driver.find_element('id','account-number-input').send_keys(self.BankAccount)
                     self.driver.find_element('id','account-number-confirmation').send_keys(self.BankAccount)
                     self.driver.find_element('id','aut-button').click()
-                    time.sleep(1)
+                    time.sleep(3)
                     #Enter name
                     self.driver.find_element('id','name-input').send_keys(f"{self.FirstName} {self.LastName}")
                     self.driver.find_element('id','aut-button').click()
-                    time.sleep(1)
+                    time.sleep(3)
                     #checking
                     self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','account-type-checking'))
                     self.driver.find_element('id','aut-button').click()
-                    time.sleep(1)
+                    time.sleep(3)
                     #checking
                     self.driver.find_element('id','aut-button').click()
                     time.sleep(3)
@@ -502,7 +532,7 @@ class GmailSelenium:
                 #end bank infoo
                 try:
                     self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
-                    time.sleep(2)
+                    time.sleep(3)
                 except:pass
                 try:
                     if self.driver.find_element('xpath','//*[@id="questions-overlay"]/div[2]'):
@@ -510,10 +540,10 @@ class GmailSelenium:
                 except:pass
                 try:
                     self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
-                    time.sleep(2)
+                    time.sleep(3)
                 except:pass
                 try:
-                    time.sleep(2)  
+                    time.sleep(3)  
                     self.driver.find_element('xpath','/html/body/div[6]/div/div[1]/div/button').click()
                 except:pass
                 time.sleep(3)
