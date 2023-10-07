@@ -500,8 +500,6 @@ class GmailSelenium:
                     time.sleep(5)
                 except:pass
                 #end bank infoo
-                self.driver.find_element('id','aut-button').click()
-                time.sleep(5)
                 try:
                     self.driver.find_element('xpath','/html/body/reach-portal/div[3]/div/div/div/div[1]/div/span/main/div[2]/button').click()
                     time.sleep(2)
