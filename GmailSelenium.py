@@ -463,10 +463,18 @@ class GmailSelenium:
                 time.sleep(1)
                 self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
                 time.sleep(3)
+                self.driver.find_element('id','aut-button').click()
                 print(self.driver.find_element('id','aut-button'))
                 #pass info bank
                 try:
+                    time.sleep(3)
                     print("dzo hgere")
+                    try:
+                        #add bank manual
+                        self.driver.execute_script("arguments[0].click();", self.driver.find_element('id','flow-type-manual'))
+                        self.driver.find_element('id','aut-button').click()
+                    except:pass
+                    time.sleep(2)
                     #Routing
                     self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-3"))
                     self.driver.find_element('id','device-input').send_keys(self.ACHRouting)
