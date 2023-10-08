@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from GmailSelenium import GmailSelenium
 import os, time, subprocess
 import pathlib, random
+from LoginSelenium import LoginSelenium
 from VerrifyBankSelenium import VerifyBankSelenium
 class EstyTool(object):
     def setupUi(self, MainWindow):
@@ -124,6 +125,9 @@ class EstyTool(object):
         self.btn_verify_bank = QtWidgets.QPushButton(self.centralwidget)
         self.btn_verify_bank.setGeometry(QtCore.QRect(190, 90, 71, 31))
         self.btn_verify_bank.setObjectName("btn_verify_bank")
+        self.btn_check_live = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_check_live.setGeometry(QtCore.QRect(270, 90, 71, 31))
+        self.btn_check_live.setObjectName("btn_check_live")
         self.btn_load = QtWidgets.QPushButton(self.centralwidget)
         self.btn_load.setGeometry(QtCore.QRect(10, 90, 51, 31))
         self.btn_load.setObjectName("btn_load")
@@ -212,6 +216,7 @@ class EstyTool(object):
         self.btn_stop.setText(_translate("MainWindow", "Stop"))
         self.btn_start.setText(_translate("MainWindow", "Start"))
         self.btn_verify_bank.setText(_translate("MainWindow", "Verify Bank"))
+        self.btn_check_live.setText(_translate("MainWindow", "Check Live"))
         self.btn_load.setText(_translate("MainWindow", "Load"))
         self.label.setText(_translate("MainWindow", "Thành công:"))
         self.label_2.setText(_translate("MainWindow", "Thất bại:"))
@@ -229,12 +234,19 @@ class EstyTool(object):
         self.runCount = 0
         self.index = 0
         self.runType = 0
+        self.row_selected = None
         self.btn_load.clicked.connect(self.LoadHotMail)
         self.btn_LD_link.clicked.connect(self.FileDialogLD)
         self.btn_stop.clicked.connect(self.ActionStop)
         self.btn_start.clicked.connect(self.StartRegAction)
         self.btn_verify_bank.clicked.connect(self.VerifyBankAction)
+        self.btn_check_live.clicked.connect(self.OpenEsty)
+        self.table_email.cellClicked.connect(self.getClickedCell)
 
+    def getClickedCell(self, row, column):
+        if row < len(self.list_hostmail) and self.list_hostmail[row]:
+            self.row_selected = self.list_hostmail[row]
+            
     def closeEvent(self, event):
         sys.exit()
     
@@ -369,6 +381,13 @@ class EstyTool(object):
                 # We suppose data are strings
                 data[row].append(str(model.data(index)))
         return data
+    
+    def OpenEsty(self):
+        if self.row_selected is None:
+            self.Mesagebox(text="Vui lòng chọn tài khoản !")
+            return
+        login = LoginSelenium(self, self.row_selected)
+        login.run()
     
     def ActionStop(self):
         self.runningJob = False
