@@ -4,6 +4,8 @@ import os, time, subprocess
 import pathlib, random
 from LoginSelenium import LoginSelenium
 from VerrifyBankSelenium import VerifyBankSelenium
+import threading
+import asyncio
 class EstyTool(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -386,6 +388,10 @@ class EstyTool(object):
         if self.row_selected is None:
             self.Mesagebox(text="Vui lòng chọn tài khoản !")
             return
+        thread = threading.Thread(target=self.LoginEsty)
+        thread.start()
+
+    def LoginEsty(self):
         login = LoginSelenium(self, self.row_selected)
         login.run()
     

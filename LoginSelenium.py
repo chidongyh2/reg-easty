@@ -1,7 +1,7 @@
 
 import random
 import time
-from selenium import webdriver
+#from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,6 +14,7 @@ from selenium_authenticated_proxy import SeleniumAuthenticatedProxy
 import os
 import random, string, datetime
 import pathlib
+from seleniumwire import webdriver
 # import undetected_chromedriver as uc
 class LoginSelenium:
     ref = None
@@ -66,7 +67,7 @@ class LoginSelenium:
                     self.driver.find_element('xpath','//*[@id="passwordNext"]').click()
             except:
                 pass
-            time.sleep(5)
+            time.sleep(8)
             try:
                 if self.driver.find_element("id",'email') or self.driver.find_element("id", 'pass'):
                     return False
@@ -78,12 +79,12 @@ class LoginSelenium:
     def loginEasty(self):
         try:
             self.driver.get("https://www.etsy.com/")
-            time.sleep(3)
+            time.sleep(5)
             try:
                 main_page = self.driver.current_window_handle
     
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
-                time.sleep(8)
+                time.sleep(15)
                 try:
                     self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
                 except:
@@ -97,7 +98,7 @@ class LoginSelenium:
                 self.driver.switch_to.window(login_page)
                 mail =  self.driver.find_element('xpath','//*[@id="view_container"]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div/div/ul/li[1]/div')
                 mail.click()
-                time.sleep(6)
+                time.sleep(15)
                 # change control to main page
                 self.driver.switch_to.window(main_page)
                 return True
@@ -109,41 +110,31 @@ class LoginSelenium:
     def __SetProxy(self, options):
         try:
             # Initialize SeleniumAuthenticatedProxy
+            print(f"http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}")
             proxy_helper = SeleniumAuthenticatedProxy(proxy_url=f"http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}")
             proxy_helper.enrich_chrome_options(options)
         except:
-            self.ref.show.emit(self.index, 22, f"Lỗi proxy")
-
+            print("error proxy")
     def get_cookies(self):
         self.driver.get('https://www.google.com')
         time.sleep(1)
         return self.driver.get_cookies()
     
-    def openEsty(self):
-        options = webdriver.ChromeOptions()
-        self.__SetProxy(options)
-        options.add_argument('--disable-blink-features=AutomationControlled')
-        options.add_experimental_option("useAutomationExtension", False)
-        options.add_experimental_option("excludeSwitches",["enable logging"])
-        options.add_experimental_option("excludeSwitches", ["enable automation"])
-        options.add_argument("--disable-popup-blocking")
-        prefs = {"profile.default_content_setting_values.notifications" : 2}
-        options.add_experimental_option("prefs",prefs)
-        self.driver = webdriver.Chrome(options=options)
-        #self.driver.delete_all_cookies()
-        time.sleep(3)
-    
     def run(self):
         options = webdriver.ChromeOptions()
-        self.__SetProxy(options)
+        #self.__SetProxy(options)
         options.add_argument('--disable-blink-features=AutomationControlled')
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
-        options.add_argument("--disable-popup-blocking")
-        prefs = {"profile.default_content_setting_values.notifications" : 2}
-        options.add_experimental_option("prefs",prefs)
-        self.driver = webdriver.Chrome(options=options)
+        options_seleniumWire = {
+            'proxy': {
+                'https': f'https://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
+                'http': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
+                'verify_ssl': False,
+            }
+        }
+        self.driver = webdriver.Chrome(options=options, seleniumwire_options=options_seleniumWire)
         #self.driver.delete_all_cookies()
         time.sleep(3)
         checkLogin = self.login()

@@ -8,3 +8,4 @@ undetected-chromedriver
 colored
 dload
 selenium_authenticated_proxy
+selenium-wire

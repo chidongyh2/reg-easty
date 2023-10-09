@@ -1,7 +1,7 @@
 
 import random
 import time
-from selenium import webdriver
+#from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 import pickle
 from urllib.request import urlopen
@@ -9,6 +9,7 @@ from colored import fg, bg, attr  # pip install colored
 from selenium_authenticated_proxy import SeleniumAuthenticatedProxy
 import os
 import random, string, datetime
+from seleniumwire import webdriver
 # import undetected_chromedriver as uc
 class VerifyBankSelenium:
     ref = None
@@ -50,7 +51,7 @@ class VerifyBankSelenium:
     def login(self):
         try:
             self.driver.get("https://accounts.google.com/")
-            time.sleep(3)
+            time.sleep(5)
             self.driver.find_element('xpath', '//input[@type="email"]').send_keys(self.Email)
             try:
                     self.driver.find_element('xpath', '//*[@id="identifierNext"]').click()
@@ -63,7 +64,7 @@ class VerifyBankSelenium:
                     self.driver.find_element('xpath','//*[@id="passwordNext"]').click()
             except:
                 pass
-            time.sleep(5)
+            time.sleep(8)
             try:
                 if self.driver.find_element("id",'email') or self.driver.find_element("id", 'pass'):
                     return False
@@ -75,12 +76,12 @@ class VerifyBankSelenium:
     def loginEasty(self):
         try:
             self.driver.get("https://www.etsy.com/")
-            time.sleep(3)
+            time.sleep(5)
             try:
                 main_page = self.driver.current_window_handle
     
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
-                time.sleep(6)
+                time.sleep(15)
                 try:
                     self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
                 except:
@@ -94,7 +95,7 @@ class VerifyBankSelenium:
                 self.driver.switch_to.window(login_page)
                 mail =  self.driver.find_element('xpath','//*[@id="view_container"]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div/div/ul/li[1]/div')
                 mail.click()
-                time.sleep(6)
+                time.sleep(15)
                 # change control to main page
                 self.driver.switch_to.window(main_page)
                 return True
@@ -108,21 +109,22 @@ class VerifyBankSelenium:
         time.sleep(5)
         try:
             #check passs if name created
-            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
-            time.sleep(2)
             self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[4]/div/div[1]/button').click()
-            time.sleep(2)
-            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[3]/div/div[1]/div/a[1]').click()
+            time.sleep(3)
+            self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[4]/div/div[1]/button').click()
+            time.sleep(3)
+            self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[3]/div/div[1]/div/a[1]').click()
+            time.sleep(3)
             time.sleep(1)
-            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
+            self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[4]/div/div[1]/button').click()
             time.sleep(5)
         except:
             pass
         try:
             self.driver.execute_script("window.scrollTo(0, 800)")
             #enter deposit code
-            if self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button'):
-                self.driver.find_element('xpath','/html/body/div[4]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button').click()
+            if self.driver.find_element('xpath','//*[@id="content"]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button'):
+                self.driver.find_element('xpath','//*[@id="content"]/div[16]/div/div/div[2]/div[7]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[2]/p/button').click()
                 time.sleep(2)
                 self.driver.switch_to.frame(self.driver.find_element("id", "plaid-link-iframe-1"))
                 self.driver.find_element('id','nonce-input').send_keys(self.code)
@@ -136,35 +138,35 @@ class VerifyBankSelenium:
             self.driver.find_element('xpath','/html/body/div[6]/div/div[1]/div/button').click()
             time.sleep(1)
             self.driver.find_element('id','billing-cc-num').send_keys(self.CardNumber)
-            month = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[5]/div[1]/div/select"))
+            month = Select(self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[5]/div[1]/div/select'))
             month.select_by_value(str(int(self.CardExpiredDay)))
-            year = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[5]/div[2]/div/select"))
+            year = Select(self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[5]/div[2]/div/select'))
             year.select_by_value(f"20{str(self.CardExpiredMoth)}") 
             self.driver.find_element('id','billing-cc-ccv').send_keys(self.CardCCV)
             self.driver.find_element('id','billing-name').send_keys(f"{self.FirstName} {self.LastName}")
-            country2 = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div[1]/select"))
+            country2 = Select(self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div[1]/select'))
             country2.select_by_visible_text("United States") 
-            address = self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[3]/div/input')
+            address = self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[3]/div/input')
             address.send_keys(self.Address)
-            zipCode = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[5]/div[1]/input")
+            zipCode = self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[5]/div[1]/input')
             zipCode.send_keys(self.ZipCode)
-            city = self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[5]/div[2]/input")
+            city = self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[5]/div[2]/input')
             city.send_keys(self.City)
-            state = Select(self.driver.find_element('xpath',"/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[6]/div/div/div[1]/select"))
+            state = Select(self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[6]/div/div/div[1]/select'))
             state.select_by_value(self.State)
-            phoneCode = self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[7]/div/input')
+            phoneCode = self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[6]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[2]/div[7]/div/input')
             phoneCode.send_keys(self.Phone)
             time.sleep(1)
-            self.driver.find_element('xpath','/html/body/div[4]/div[3]/div[4]/div/div[1]/button').click()
+            self.driver.find_element('xpath','//*[@id="content"]/div[3]/div[4]/div/div[1]/button').click()
             time.sleep(5)
         except:
             pass
 
         try:
-            self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/button').click()
+            self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/button').click()
             time.sleep(3)
-            self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/div/div/div/button[3]').click()
-            self.driver.find_element('xpath','/html/body/div[4]/div[2]/div/div/div[7]/div/div/div[2]/div/div[1]/button').click()
+            self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[7]/div/div/div[1]/div/div/div/div/div/div/div/div/button[3]').click()
+            self.driver.find_element('xpath','//*[@id="content"]/div[2]/div/div/div[7]/div/div/div[2]/div/div[1]/button').click()
             return True
         except:pass
 
@@ -193,7 +195,14 @@ class VerifyBankSelenium:
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
-        self.driver = webdriver.Chrome(options=options)
+        options_seleniumWire = {
+            'proxy': {
+                'https': f'https://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
+                'http': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
+                'verify_ssl': False,
+            }
+        }
+        self.driver = webdriver.Chrome(options=options, seleniumwire_options=options_seleniumWire)
         #self.driver.delete_all_cookies()
         time.sleep(5)
         checkLogin = self.login() 
