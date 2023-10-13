@@ -100,9 +100,9 @@
     <widget class="QSpinBox" name="delayLD_input">
      <property name="geometry">
       <rect>
-       <x>460</x>
+       <x>451</x>
        <y>20</y>
-       <width>42</width>
+       <width>41</width>
        <height>20</height>
       </rect>
      </property>
@@ -126,7 +126,7 @@
     <widget class="QCheckBox" name="hidden_chrome">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>700</x>
        <y>20</y>
        <width>151</width>
        <height>20</height>
@@ -142,14 +142,73 @@
     <widget class="QCheckBox" name="update_info_mail">
      <property name="geometry">
       <rect>
-       <x>660</x>
+       <x>800</x>
        <y>20</y>
-       <width>151</width>
+       <width>101</width>
        <height>20</height>
       </rect>
      </property>
      <property name="text">
       <string>Update info mail</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="delayLD_label_2">
+     <property name="geometry">
+      <rect>
+       <x>516</x>
+       <y>20</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Quy trình:</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="stepComboBox">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>20</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>Login</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>AddName</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>CreateShop</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Full</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QCheckBox" name="proxy_pass">
+     <property name="geometry">
+      <rect>
+       <x>920</x>
+       <y>20</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Proxy pass</string>
      </property>
      <property name="checked">
       <bool>true</bool>

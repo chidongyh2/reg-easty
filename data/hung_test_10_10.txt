@@ -1,0 +1,2 @@
+Proxy|proxy Port|proxy User|proxy Pass|Email|Passmail|Fname|Lname|ssn|dl|add|city|state|zipcode|phone|dob|ACH roughting number| Bank account number|card Number| Expriation month | Expriation day | CCV
+us.smartproxy.com|10001|spwjxxce14|c4l0sn6wnziKRjj2VE|citlalilacey00@gmail.com|vangqua12311|Michael C|Maupin|506785177|218|N Sumner|Wallace|Ne|69169|3083874628|31854|031100209|73380000000814159|5374921174243489|10|26|211

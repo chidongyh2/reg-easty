@@ -35,20 +35,30 @@ class EstyTool(object):
         self.thread_label_2.setGeometry(QtCore.QRect(25, 20, 31, 20))
         self.thread_label_2.setObjectName("thread_label_2")
         self.delayLD_input = QtWidgets.QSpinBox(self.groupBox_2)
-        self.delayLD_input.setGeometry(QtCore.QRect(460, 20, 42, 20))
+        self.delayLD_input.setGeometry(QtCore.QRect(451, 20, 41, 20))
         self.delayLD_input.setProperty("value", 1)
         self.delayLD_input.setObjectName("delayLD_input")
         self.delayLD_label = QtWidgets.QLabel(self.groupBox_2)
         self.delayLD_label.setGeometry(QtCore.QRect(410, 20, 47, 20))
         self.delayLD_label.setObjectName("delayLD_label")
         self.hidden_chrome = QtWidgets.QCheckBox(self.groupBox_2)
-        self.hidden_chrome.setGeometry(QtCore.QRect(540, 20, 151, 20))
+        self.hidden_chrome.setGeometry(QtCore.QRect(700, 20, 151, 20))
         self.hidden_chrome.setChecked(True)
         self.hidden_chrome.setObjectName("hidden_chrome")
         self.update_info_mail = QtWidgets.QCheckBox(self.groupBox_2)
-        self.update_info_mail.setGeometry(QtCore.QRect(660, 20, 151, 20))
+        self.update_info_mail.setGeometry(QtCore.QRect(820, 20, 151, 20))
         self.update_info_mail.setChecked(True)
         self.update_info_mail.setObjectName("update_info_mail")
+        self.delayLD_label_2 = QtWidgets.QLabel(self.groupBox_2)
+        self.delayLD_label_2.setGeometry(QtCore.QRect(516, 20, 51, 20))
+        self.delayLD_label_2.setObjectName("delayLD_label_2")
+        self.stepComboBox = QtWidgets.QComboBox(self.groupBox_2)
+        self.stepComboBox.setGeometry(QtCore.QRect(570, 20, 111, 20))
+        self.stepComboBox.setObjectName("stepComboBox")
+        self.stepComboBox.addItem("")
+        self.stepComboBox.addItem("")
+        self.stepComboBox.addItem("")
+        self.stepComboBox.addItem("")
         self.tab_data = QtWidgets.QTabWidget(self.centralwidget)
         self.tab_data.setGeometry(QtCore.QRect(10, 130, 1051, 621))
         self.tab_data.setObjectName("tab_data")
@@ -174,6 +184,11 @@ class EstyTool(object):
         self.delayLD_label.setText(_translate("MainWindow", "Delay:"))
         self.hidden_chrome.setText(_translate("MainWindow", "Ẩn trình duyệt"))
         self.update_info_mail.setText(_translate("MainWindow", "Update info mail"))
+        self.delayLD_label_2.setText(_translate("MainWindow", "Quy trình:"))
+        self.stepComboBox.setItemText(0, _translate("MainWindow", "Login"))
+        self.stepComboBox.setItemText(1, _translate("MainWindow", "AddName"))
+        self.stepComboBox.setItemText(2, _translate("MainWindow", "CreateShop"))
+        self.stepComboBox.setItemText(3, _translate("MainWindow", "Full"))
         item = self.table_email.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Proxy"))
         item = self.table_email.horizontalHeaderItem(1)
@@ -235,8 +250,12 @@ class EstyTool(object):
         self.dataExcute = []
         self.runCount = 0
         self.index = 0
+        self.lastIndex = 0   
+        self.threadIndex = 0
         self.runType = 0
         self.row_selected = None
+        self.list_selected = []
+        self.row_index = None
         self.btn_load.clicked.connect(self.LoadHotMail)
         self.btn_LD_link.clicked.connect(self.FileDialogLD)
         self.btn_stop.clicked.connect(self.ActionStop)
@@ -245,9 +264,16 @@ class EstyTool(object):
         self.btn_check_live.clicked.connect(self.OpenEsty)
         self.table_email.cellClicked.connect(self.getClickedCell)
 
+
     def getClickedCell(self, row, column):
         if row < len(self.list_hostmail) and self.list_hostmail[row]:
             self.row_selected = self.list_hostmail[row]
+            self.row_index = row
+        if row < len(self.list_hostmail) and self.list_hostmail[row]:
+            if self.list_hostmail[row] not in self.list_selected:
+                self.list_selected.append(self.list_hostmail[row])
+            else:
+                self.list_selected.remove(self.list_hostmail[row])
             
     def closeEvent(self, event):
         sys.exit()
@@ -265,6 +291,19 @@ class EstyTool(object):
             self.runCount = 0
             self.indexsuccess = 0
             self.indexerror = 0
+            self.runningJob = False
+            self.index = 0
+            self.runCount = 0
+            self.indexsuccess = 0
+            self.indexerror = 0
+            self.listthread = []
+            self.list_selected = []
+            self.row_selected = None
+            self.threadreg = None
+            self.label_success.setText(f"<p><span style=\" color:#00aa00;\"> {self.indexsuccess} </span></p>")
+            self.label_error.setText(f"<p><span style=\" color:#ff0000;\"> {self.indexerror} </span></p>")
+            self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Chưa chạy </span></p>")
+            
             if len(self.LD_link.text()) <= 1 or not os.path.exists(self.LD_link.text()):
                 self.Mesagebox(text="Chọn file dữ liệu !")
             else:
@@ -336,7 +375,6 @@ class EstyTool(object):
         self.table_email.setItem(row, column, QtWidgets.QTableWidgetItem(text))
         
     def ChangeTextSuccessAndError(self, check, row, status):
-        time.sleep(3)
         if check == True:
             self.indexsuccess += 1
             self.label_success.setText(f"<p><span style=\" color:#00aa00;\"> {self.indexsuccess} </span></p>")
@@ -344,10 +382,13 @@ class EstyTool(object):
             self.indexerror += 1
             self.label_error.setText(f"<p><span style=\" color:#ff0000;\"> {self.indexerror} </span></p>")
         self.runCount -= 1
-        if self.runType == 1:self.StartReg()
-        if self.runType == 2:self.VerifyBank()
+        if self.runType == 1:
+            self.StartReg()
+        if self.runType == 2:
+            self.VerifyBank()
 
-        if self.index == len(self.list_hostmail) and self.runType == 1:
+        print('self.threadIndex', self.threadIndex, len(self.list_selected))
+        if (self.index == len(self.list_hostmail) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)) and self.runType == 1:
             self.runningJob = False
             self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
             dataSave = list(self.retriveTableData())
@@ -360,7 +401,7 @@ class EstyTool(object):
                     else: str += i
                 open(f'{self.LD_link.text().replace(".txt", "")}_finished.txt', 'a+', encoding="utf-8").write("%s\n"%(str))
 
-        if self.index == len(self.dataExcute) and self.runType == 2:
+        if (self.index == len(self.dataExcute) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)) and self.runType == 2:
             self.runningJob = False
             self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
             dataSave = list(self.retriveTableData())
@@ -385,6 +426,16 @@ class EstyTool(object):
         return data
     
     def OpenEsty(self):
+        self.threadRun = None
+        if self.row_selected is None:
+            self.Mesagebox(text="Vui lòng chọn tài khoản !")
+            return
+        self.threadRun = StartQ(self, self.row_index, self.row_selected, "Login", False, False)
+        self.threadRun.start()
+        self.threadRun.show.connect(self.ShowTable)
+        self.threadRun.checksuccess.connect(self.ChangeTextSuccessAndError)
+
+    def OpenEsty2(self):
         if self.row_selected is None:
             self.Mesagebox(text="Vui lòng chọn tài khoản !")
             return
@@ -394,7 +445,7 @@ class EstyTool(object):
     def LoginEsty(self):
         login = LoginSelenium(self, self.row_selected)
         login.run()
-    
+
     def ActionStop(self):
         self.runningJob = False
     
@@ -408,8 +459,12 @@ class EstyTool(object):
             self.runType = 2
             self.index = 0
             self.runCount = 0
+            self.threadIndex = 0
             self.indexsuccess = 0
             self.indexerror = 0
+            self.lastIndex = 0             
+            self.listthread = []
+            self.threadreg = None
             self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
             self.runningJob = True
             self.VerifyBank()
@@ -421,24 +476,48 @@ class EstyTool(object):
             self.indexsuccess = 0
             self.indexerror = 0
             self.runCount = 0
+            self.lastIndex = 0
+            self.listthread = []
+            self.threadIndex = 0
+            self.threadreg = None
             self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
             self.runningJob = True
             self.StartReg()
 
     def StartReg(self):
-        if len(self.list_hostmail) > self.index:
-            for vm in self.list_hostmail:
-                if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
-                    data = self.list_hostmail[self.index]
-                    self.threadreg = StartQ(self, self.index, data, self.hidden_chrome.isChecked(), self.update_info_mail.isChecked())
-                    self.threadreg.start()
-                    self.threadreg.show.connect(self.ShowTable)
-                    self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
-                    self.listthread.append(self.threadreg)
-                    self.index += 1
-                    self.runCount += 1
-                    time.sleep(1)
-                    print('self', self.index, self.runCount)
+        if self.list_selected is None or len(self.list_selected) == 0:
+            if len(self.list_hostmail) > self.index:
+                for vm in self.list_hostmail:
+                    if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
+                        data = self.list_hostmail[self.index]
+                        self.threadreg = StartQ(self, self.index, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked())
+                        self.threadreg.start()
+                        self.threadreg.show.connect(self.ShowTable)
+                        self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
+                        self.listthread.append(self.threadreg)
+                        self.runCount += 1
+                        self.Delay(1)
+                        self.index += 1
+                        print('self', self.index, self.runCount)
+        else:
+            if len(self.list_selected) > self.threadIndex:
+                index = 0
+                for vm in self.list_hostmail:
+                    index += 1
+                    item = next((x for x in self.list_selected if str(vm).split("|")[4] in x), None)
+                    if self.runCount < int(self.threadCount.text()) and index > self.threadIndex and item is not None and index > self.lastIndex:
+                        self.lastIndex = index
+                        data = self.list_hostmail[index - 1]
+                        self.threadreg = self.threadreg = StartQ(self, index - 1, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked())
+                        self.threadreg.show.connect(self.ShowTable)
+                        self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
+                        self.listthread.append(self.threadreg)
+                        self.threadreg.start()
+                        self.runCount += 1
+                        self.threadIndex += 1
+                        print('self', index, self.runCount)
+                        self.Delay(self.delayLD_input.value())
+
 
 
     def VerifyBank(self):
@@ -454,7 +533,7 @@ class EstyTool(object):
                     self.threadreg.show.connect(self.ShowTable)
                     self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
                     self.runCount += 1
-                    time.sleep(1)
+                    self.Delay(self.delayLD_input.value())
                     print('self', self.index - 1, self.runCount)  
 
 
@@ -463,16 +542,17 @@ class StartQ(QtCore.QThread):
     show = QtCore.pyqtSignal(int, int, str)
     checkRegisterSuccess = QtCore.pyqtSignal(int, int, str)
     checksuccess = QtCore.pyqtSignal(bool, int, str)
-    def __init__(self, ref, index, data, hiddenBrowser, changeInfoMail) -> None:
+    def __init__(self, ref, index, data, runType, hiddenBrowser, changeInfoMail) -> None:
         super().__init__()
         self.ref = ref
         self.index = index
         self.data = data
+        self.runType = runType
         self.hiddenBrowser = hiddenBrowser
         self.changeInfoMail = changeInfoMail
 
     def run(self):
-        self.reg = GmailSelenium(self.index, self.data, self.hiddenBrowser, self.changeInfoMail)
+        self.reg = GmailSelenium(self.index, self.data, self.runType, self.hiddenBrowser, self.changeInfoMail)
         self.reg.ref = self
         self.reg.run()
         time.sleep(0.1)
