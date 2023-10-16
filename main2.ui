@@ -140,7 +140,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QTabWidget" name="tab_data">
+   <widget class="QTabWidget" name="tab_easty_data">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -154,7 +154,7 @@
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Mail tab</string>
+      <string>Easty</string>
      </attribute>
      <widget class="QTableWidget" name="table_email">
       <property name="geometry">
@@ -319,6 +319,107 @@
       <column>
        <property name="text">
         <string>Verify Code</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+      </column>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_change_mail">
+     <attribute name="title">
+      <string>Change mail</string>
+     </attribute>
+     <widget class="QTableWidget" name="table_mail_change">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>1025</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>1</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>1025</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::DefaultContextMenu</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="autoScrollMargin">
+       <number>16</number>
+      </property>
+      <property name="dragEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="showGrid">
+       <bool>true</bool>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>170</number>
+      </attribute>
+      <attribute name="verticalHeaderStretchLastSection">
+       <bool>true</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Proxy</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Email</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Password</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Emai KP</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>New Password</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>New Mail KP</string>
        </property>
       </column>
       <column>
@@ -500,7 +601,7 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_easty">
       <attribute name="title">

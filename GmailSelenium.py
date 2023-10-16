@@ -27,27 +27,33 @@ class GmailSelenium:
         self.ProxyPassword = self.data[3]
         self.Email = self.data[4]
         self.Password = self.data[5]
-        self.FirstName = self.data[6]
-        self.LastName = self.data[7]
-        self.SSN = self.data[8]  #ma số định danh
-        self.DL = self.data[9]  #driver licence nunber
-        self.Address = self.data[10]
-        self.City = self.data[11]
-        self.State = self.data[12] # mã quốc gia
-        self.ZipCode = self.data[13] # mã quốc gia
-        self.Phone = self.data[14] # ngày tháng năm sinh
-        self.Dob = self.data[15] # mã routing thẻ 
-        self.ACHRouting = self.data[16] # mã routing thẻ 
-        self.BankAccount = self.data[17] # Mã ngân hàng
-        self.CardNumber = self.data[18] # Mã thẻ
-        self.CardExpiredDay = self.data[19]
-        self.CardExpiredMoth = self.data[20]
-        self.CardCCV = self.data[21] # mã vissa
+        self.EmailKP = self.data[6]
+        self.FirstName = self.data[7]
+        self.LastName = self.data[8]
+        self.SSN = self.data[9]  #ma số định danh
+        self.DL = self.data[10]  #driver licence nunber
+        self.Address = self.data[11]
+        self.City = self.data[12]
+        self.State = self.data[13] # mã quốc gia
+        self.ZipCode = self.data[14] # mã quốc gia
+        self.Phone = self.data[15] # ngày tháng năm sinh
+        self.Dob = self.data[16] # mã routing thẻ 
+        self.ACHRouting = self.data[17] # mã routing thẻ 
+        self.BankAccount = self.data[18] # Mã ngân hàng
+        self.CardNumber = self.data[19] # Mã thẻ
+        self.CardExpiredDay = self.data[20]
+        self.CardExpiredMoth = self.data[21]
+        self.CardCCV = self.data[22] # mã vissa
         #self.CardName = self.data[23] # Name of Card
-        try:self.Status = self.data[22] # Trạng thái
+        try:
+            self.LoginSuccess = self.data[23] # Login success
+            self.RequestStatus = self.data[24] # Trạng thái request
         except:pass
-        try:self.CreatedDate = self.data[23] # Created Date
+        try:self.VerifyCode = self.data[25] # Created Date
         except:pass
+        try:self.Status = self.data[26] # Trạng thái
+        except:pass
+
         
     def login(self):
         try:
@@ -673,20 +679,13 @@ class GmailSelenium:
             print("except bypass ID upload")
             pass
 
-            
-
-    def __SetProxy(self, options):
+    def requestKhang(self):
         try:
-            # Initialize SeleniumAuthenticatedProxy
-            proxy_helper = SeleniumAuthenticatedProxy(proxy_url=f"http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}")
-            proxy_helper.enrich_chrome_options(options)
+            self.driver.get("https://accounts.google.com/")
+            time.sleep(8)
+            return True
         except:
-            self.ref.show.emit(self.index, 22, f"Lỗi proxy")
-
-    def get_cookies(self):
-        self.driver.get('https://www.google.com')
-        time.sleep(1)
-        return self.driver.get_cookies()
+            return False
     
     def run(self):
         options = webdriver.ChromeOptions()
@@ -717,7 +716,7 @@ class GmailSelenium:
             loginEasty = self.loginEasty()
             if loginEasty == True:
                 self.ref.show.emit(self.index, 19, f"Login easty thành công")
-                if self.runType != 'Login':
+                if self.runType == 'AddName' or self.runType == 'CreateShop' or self.runType == 'Full':
                     registerShop = self.registerShopEasty()
                     if registerShop == True:
                         self.ref.checksuccess.emit(True, self.index, "register")
@@ -725,8 +724,13 @@ class GmailSelenium:
                     else: 
                         self.ref.show.emit(self.index, 19, f"Đăng ký tài khoản không thành công vui lòng kiểm tra lại")
                         self.ref.checksuccess.emit(False, self.index, "register")
-                else:
+                elif self.runType == 'Login':
                     self.ref.checksuccess.emit(True, self.index, "register")
+                elif self.runType == 'Khang: Check Live':
+                    self.ref.checksuccess.emit(True, self.index, "register")
+                else:
+                    #request kháng
+                    requestKhang = self.requestKhang()
             else:
                 self.ref.show.emit(self.index, 19, f"Login easty thất bại")
                 self.ref.checksuccess.emit(False, self.index, "register")
