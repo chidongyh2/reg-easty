@@ -1,12 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from ChangeGmailSelenium import ChangeGmailSelenium
 from GmailSelenium import GmailSelenium
-import os, time, subprocess
-import pathlib, random
+import os, time
 from LoginSelenium import LoginSelenium
 from VerrifyBankSelenium import VerifyBankSelenium
 import threading
-import asyncio
 class EstyTool(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -494,7 +492,7 @@ class EstyTool(object):
             try:
                 self.ShowTable(i, 18, mail[23])
                 self.ShowTable(i, 19, mail[24])
-                self.ShowTable(i, 21, mail[26])
+                self.ShowTable(i, 21, mail[25])
             except:pass
 
             #table mail change
@@ -533,6 +531,7 @@ class EstyTool(object):
         self.table_mail_change.setItem(row, column, QtWidgets.QTableWidgetItem(text))
 
     def ChangeTextSuccessAndError(self, check, row, status):
+        print("status", status)
         if check == True:
             self.indexsuccess += 1
             self.label_success.setText(f"<p><span style=\" color:#00aa00;\"> {self.indexsuccess} </span></p>")
@@ -556,8 +555,24 @@ class EstyTool(object):
                 for data in dataSave:
                     str = ""
                     for i in data:
-                        if len(str) > 0:str += f"|{i}"
-                        else: str += i
+                        if index == 0: #proxy
+                            for proxy in i.split(":"):
+                                if len(str) > 0:
+                                    str += f"|{proxy}"
+                                else: str += proxy
+                        elif index == 4: # Name
+                            str += f"|{i.split(' ')[0]} {i.split(' ')[1]}"
+                            try:
+                                str += f"|{i.split(' ')[2]} {i.split(' ')[3]}"
+                            except:
+                                str += f"|{i.split(' ')[2]}"
+                        elif index == 16: # card date
+                            str +=  f"|{i.split('/')[0]}"
+                            str +=  f"|{i.split('/')[1]}"
+                        else: 
+                            if len(str) > 0:
+                                str += f"|{i}"
+                            else: str += i
                     open(f'{self.LD_link.text().replace(".txt", "")}_finished.txt', 'a+', encoding="utf-8").write("%s\n"%(str))
 
             if (self.index == len(self.dataExcute) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)) and self.runType == 2:
@@ -570,11 +585,27 @@ class EstyTool(object):
                 for data in dataSave:
                     str = ""
                     for i in data:
-                        if len(str) > 0:str += f"|{i}"
-                        else: str += i
+                        if index == 0: #proxy
+                            for proxy in i.split(":"):
+                                if len(str) > 0:
+                                    str += f"|{proxy}"
+                                else: str += proxy
+                        elif index == 4: # Name
+                            str += f"|{i.split(' ')[0]} {i.split(' ')[1]}"
+                            try:
+                                str += f"|{i.split(' ')[2]} {i.split(' ')[3]}"
+                            except:
+                                str += f"|{i.split(' ')[2]}"
+                        elif index == 16: # card date
+                            str +=  f"|{i.split('/')[0]}"
+                            str +=  f"|{i.split('/')[1]}"
+                        else: 
+                            if len(str) > 0:
+                                str += f"|{i}"
+                            else: str += i
                     open(f'{self.LD_link.text().replace(".txt", "")}_finished.txt', 'a+').write("%s\n"%(str))
         else: #handle for mail
-            if (self.index == len(self.dataExcute) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)):
+            if (self.index == len(self.list_hostmail) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)):
                 self.runningJob = False
                 self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
                 dataGmail = list(self.retriveTableData())
@@ -587,26 +618,45 @@ class EstyTool(object):
                     str = ""
                     index = 0
                     for i in data:
-                        if len(str) > 0:
-                            if index == 5:
-                                if status.split("|")[0] == True: #password success
-                                    if self.change_password.isChecked():
-                                        if self.pass_general.isChecked():
-                                            #pass chung
-                                            str += f"|{self.input_pass_general.text()}"
-                                        if self.pass_random.isChecked() or self.pass_specific.isChecked():
-                                            str += f"|{dataGmail[rowIndex][5]}"
-                            elif index == 6:                    
-                                if status.split("|")[1] == True: #mail success
-                                    if self.change_mail_2.isChecked():
-                                        if self.gmail_general.isChecked():
-                                            #mail chung
-                                            str += f"|{self.input_gmail_general.text()}"
-                                        if self.gmail_random.isChecked() or self.gmail_specific.isChecked():
-                                            str += f"|{dataGmail[rowIndex][6]}"
-                            else:
-                                str += f"|{i}"
-                        else: str += i
+                        if index == 0: #proxy
+                            for proxy in i.split(":"):
+                                if len(str) > 0:
+                                    str += f"|{proxy}"
+                                else: str += proxy
+                        elif index == 4: # Name
+                            str += f"|{i.split(' ')[0]} {i.split(' ')[1]}"
+                            try:
+                                str += f"|{i.split(' ')[2]} {i.split(' ')[3]}"
+                            except:
+                                str += f"|{i.split(' ')[2]}"
+                        elif index == 16: # card date
+                            str +=  f"|{i.split('/')[0]}"
+                            str +=  f"|{i.split('/')[1]}"
+                        else: 
+                            if len(str) > 0:
+                                if index == 2 and check == True:
+                                    if status.split("|")[0] == 'True': #password success
+                                        if self.change_password.isChecked():
+                                            if self.pass_general.isChecked():
+                                                #pass chung
+                                                str += f"|{self.input_pass_general.text()}"
+                                            if self.pass_random.isChecked() or self.pass_specific.isChecked():
+                                                str += f"|{dataGmail[rowIndex][4]}"
+                                    else:
+                                        str += f"|{i}"
+                                elif index == 3 and check == True:                    
+                                    if status.split("|")[1] == 'True': #mail success
+                                        if self.change_mail_2.isChecked():
+                                            if self.gmail_general.isChecked():
+                                                #mail chung
+                                                str += f"|{self.input_gmail_general.text()}"
+                                            if self.gmail_random.isChecked() or self.gmail_specific.isChecked():
+                                                str += f"|{dataGmail[rowIndex][5]}"
+                                    else:
+                                        str += f"|{i}"
+                                else:
+                                    str += f"|{i}"
+                            else: str += i
                         index += 1
                     rowIndex += 1
                     open(f'{self.LD_link.text().replace(".txt", "")}_changemail_finished.txt', 'a+').write("%s\n"%(str))
@@ -739,7 +789,7 @@ class EstyTool(object):
                                                              self.change_password.isChecked(), changePasswordType, self.input_pass_general.text(),
                                                               self.change_mail_2.isChecked(), changeMailType, self.input_gmail_general.text())
                             self.threadreg.start()
-                            self.threadreg.show.connect(self.ShowTable)
+                            self.threadreg.show.connect(self.ShowTableMailChange)
                             self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
                             self.listthread.append(self.threadreg)
                             self.runCount += 1
@@ -758,7 +808,7 @@ class EstyTool(object):
                             self.threadreg = StartQChangeMail(self, index - 1, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
                                                               self.change_password.isChecked(), changePasswordType, self.input_pass_general.text(),
                                                               self.change_mail_2.isChecked(), changeMailType, self.input_gmail_general.text())
-                            self.threadreg.show.connect(self.ShowTable)
+                            self.threadreg.show.connect(self.ShowTableMailChange)
                             self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
                             self.listthread.append(self.threadreg)
                             self.threadreg.start()

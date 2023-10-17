@@ -6,7 +6,6 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from urllib.request import urlopen
 from colored import fg, bg, attr  # pip install colored
-from selenium_authenticated_proxy import SeleniumAuthenticatedProxy
 import os
 import random, string, datetime
 from seleniumwire import webdriver
@@ -49,9 +48,7 @@ class GmailSelenium:
             self.LoginSuccess = self.data[23] # Login success
             self.RequestStatus = self.data[24] # Trạng thái request
         except:pass
-        try:self.VerifyCode = self.data[25] # Created Date
-        except:pass
-        try:self.Status = self.data[26] # Trạng thái
+        try:self.Status = self.data[25] # Trạng thái
         except:pass
 
         

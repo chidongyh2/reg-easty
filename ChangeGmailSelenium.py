@@ -80,6 +80,8 @@ class ChangeGmailSelenium:
         try:
             self.driver.get("https://myaccount.google.com/recovery/email")
             time.sleep(8)
+            self.driver.find_element('id', 'i5').clear()
+            time.sleep(1)
             self.driver.find_element('id', 'i5').send_keys(self.newmailKP)
             try:
                     self.driver.find_element('xpath', '/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[1]/div[4]/div/form/div/div[2]/div[2]').click()
@@ -87,10 +89,10 @@ class ChangeGmailSelenium:
                 pass
             time.sleep(15)
             try:
-                if self.driver.find_element('id', 'i5'):
-                    return False
+                if self.driver.find_element('xpath', '//*[@id="yDmH0d"]/div[13]/div[2]/div/div[2]/div[2]/button'):
+                    return True
             except:
-                return True
+                return False
         except:
             return False
 
@@ -118,21 +120,22 @@ class ChangeGmailSelenium:
         changePassWord = False
         changeMail = False
         if checkLogin == True:
-            self.ref.show.emit(self.index, 26, f"Login gmail thành công")
+            self.ref.show.emit(self.index, 5, f"Login gmail thành công")
             if self.changePassword == True:
                 changePassWord = self.changePasswordFunc()
+                print('changePassWord', changePassWord)
                 if changePassWord == True:
-                    self.ref.show.emit(self.index, 26, f"Login gmail thành công")    
+                    self.ref.show.emit(self.index, 5, f"Change pass thành công")    
 
             if self.changeMail == True:
                 changeMail = self.changeMailFunc()
                 if changeMail == True:
-                    self.ref.show.emit(self.index, 26, f"Login gmail thành công")    
+                    self.ref.show.emit(self.index, 5, f"Change gmail thành công")    
 
-            self.ref.checksuccess.emit(True, self.index, f"{changePassWord}|{changeMail}")  
+            self.ref.checksuccess.emit(True, self.index, f"{str(changePassWord)}|{str(changeMail)}")  
 
         if checkLogin == False:
-            self.ref.show.emit(self.index, 26, f"Login gmail thất bại")
+            self.ref.show.emit(self.index, 5, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "register")  
         #protected account
         time.sleep(1)

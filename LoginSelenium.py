@@ -1,19 +1,10 @@
 
-import random
 import time
 #from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver import ActionChains
-import pickle
 from urllib.request import urlopen
 from colored import fg, bg, attr  # pip install colored
 from selenium_authenticated_proxy import SeleniumAuthenticatedProxy
-import os
-import random, string, datetime
-import pathlib
+import random
 from seleniumwire import webdriver
 # import undetected_chromedriver as uc
 class LoginSelenium:
