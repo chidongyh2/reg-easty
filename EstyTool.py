@@ -8,12 +8,12 @@ import threading
 class EstyTool(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1069, 855)
+        MainWindow.resize(1064, 885)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setEnabled(True)
-        self.groupBox_2.setGeometry(QtCore.QRect(10, 10, 341, 131))
+        self.groupBox_2.setGeometry(QtCore.QRect(10, 0, 341, 171))
         self.groupBox_2.setInputMethodHints(QtCore.Qt.ImhNone)
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
@@ -41,11 +41,26 @@ class EstyTool(object):
         self.delayLD_label.setGeometry(QtCore.QRect(39, 90, 47, 20))
         self.delayLD_label.setObjectName("delayLD_label")
         self.hidden_chrome = QtWidgets.QCheckBox(self.groupBox_2)
-        self.hidden_chrome.setGeometry(QtCore.QRect(188, 75, 91, 20))
+        self.hidden_chrome.setGeometry(QtCore.QRect(150, 60, 91, 20))
         self.hidden_chrome.setChecked(True)
         self.hidden_chrome.setObjectName("hidden_chrome")
+        self.proxy_combobox = QtWidgets.QComboBox(self.groupBox_2)
+        self.proxy_combobox.setGeometry(QtCore.QRect(50, 130, 81, 20))
+        self.proxy_combobox.setObjectName("proxy_combobox")
+        self.proxy_combobox.addItem("")
+        self.proxy_combobox.addItem("")
+        self.delayLD_label_3 = QtWidgets.QLabel(self.groupBox_2)
+        self.delayLD_label_3.setGeometry(QtCore.QRect(10, 130, 41, 20))
+        self.delayLD_label_3.setObjectName("delayLD_label_3")
+        self.input_proxy = QtWidgets.QLineEdit(self.groupBox_2)
+        self.input_proxy.setGeometry(QtCore.QRect(140, 130, 191, 20))
+        self.input_proxy.setObjectName("input_proxy")
+        self.update_info_mail = QtWidgets.QCheckBox(self.groupBox_2)
+        self.update_info_mail.setGeometry(QtCore.QRect(150, 90, 101, 20))
+        self.update_info_mail.setChecked(True)
+        self.update_info_mail.setObjectName("update_info_mail")
         self.tab_easty_data = QtWidgets.QTabWidget(self.centralwidget)
-        self.tab_easty_data.setGeometry(QtCore.QRect(10, 190, 1051, 621))
+        self.tab_easty_data.setGeometry(QtCore.QRect(10, 220, 1051, 621))
         self.tab_easty_data.setObjectName("tab_easty_data")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
@@ -158,46 +173,46 @@ class EstyTool(object):
         self.table_mail_change.verticalHeader().setStretchLastSection(True)
         self.tab_easty_data.addTab(self.tab_change_mail, "")
         self.btn_stop = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_stop.setGeometry(QtCore.QRect(130, 150, 51, 31))
+        self.btn_stop.setGeometry(QtCore.QRect(130, 180, 51, 31))
         self.btn_stop.setObjectName("btn_stop")
         self.btn_start = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_start.setGeometry(QtCore.QRect(70, 150, 51, 31))
+        self.btn_start.setGeometry(QtCore.QRect(70, 180, 51, 31))
         self.btn_start.setObjectName("btn_start")
         self.btn_verify_bank = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_verify_bank.setGeometry(QtCore.QRect(190, 150, 71, 31))
+        self.btn_verify_bank.setGeometry(QtCore.QRect(190, 180, 71, 31))
         self.btn_verify_bank.setObjectName("btn_verify_bank")
         self.btn_check_live = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_check_live.setGeometry(QtCore.QRect(270, 150, 71, 31))
+        self.btn_check_live.setGeometry(QtCore.QRect(270, 180, 71, 31))
         self.btn_check_live.setObjectName("btn_check_live")
         self.btn_load = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_load.setGeometry(QtCore.QRect(10, 150, 51, 31))
+        self.btn_load.setGeometry(QtCore.QRect(10, 180, 51, 31))
         self.btn_load.setObjectName("btn_load")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(375, 160, 61, 16))
+        self.label.setGeometry(QtCore.QRect(375, 190, 61, 16))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(490, 160, 51, 16))
+        self.label_2.setGeometry(QtCore.QRect(490, 190, 51, 16))
         self.label_2.setObjectName("label_2")
         self.label_success = QtWidgets.QLabel(self.centralwidget)
-        self.label_success.setGeometry(QtCore.QRect(440, 160, 51, 16))
+        self.label_success.setGeometry(QtCore.QRect(440, 190, 51, 16))
         self.label_success.setObjectName("label_success")
         self.label_error = QtWidgets.QLabel(self.centralwidget)
-        self.label_error.setGeometry(QtCore.QRect(538, 160, 51, 16))
+        self.label_error.setGeometry(QtCore.QRect(538, 190, 51, 16))
         self.label_error.setObjectName("label_error")
         self.label_5 = QtWidgets.QLabel(self.centralwidget)
-        self.label_5.setGeometry(QtCore.QRect(582, 160, 51, 16))
+        self.label_5.setGeometry(QtCore.QRect(582, 190, 51, 16))
         self.label_5.setObjectName("label_5")
         self.label_running_status = QtWidgets.QLabel(self.centralwidget)
-        self.label_running_status.setGeometry(QtCore.QRect(640, 160, 191, 16))
+        self.label_running_status.setGeometry(QtCore.QRect(640, 190, 191, 16))
         self.label_running_status.setObjectName("label_running_status")
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setEnabled(True)
-        self.groupBox_3.setGeometry(QtCore.QRect(360, 0, 681, 151))
+        self.groupBox_3.setGeometry(QtCore.QRect(360, 0, 681, 171))
         self.groupBox_3.setInputMethodHints(QtCore.Qt.ImhNone)
         self.groupBox_3.setTitle("")
         self.groupBox_3.setObjectName("groupBox_3")
         self.tabWidget = QtWidgets.QTabWidget(self.groupBox_3)
-        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 661, 131))
+        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 661, 151))
         self.tabWidget.setObjectName("tabWidget")
         self.tab_easty = QtWidgets.QWidget()
         self.tab_easty.setObjectName("tab_easty")
@@ -216,10 +231,6 @@ class EstyTool(object):
         self.stepComboBox.addItem("")
         self.stepComboBox.addItem("")
         self.stepComboBox.addItem("")
-        self.update_info_mail = QtWidgets.QCheckBox(self.tab_easty)
-        self.update_info_mail.setGeometry(QtCore.QRect(210, 40, 101, 20))
-        self.update_info_mail.setChecked(True)
-        self.update_info_mail.setObjectName("update_info_mail")
         self.tabWidget.addTab(self.tab_easty, "")
         self.tab_gmail = QtWidgets.QWidget()
         self.tab_gmail.setObjectName("tab_gmail")
@@ -266,7 +277,7 @@ class EstyTool(object):
         self.tabWidget.addTab(self.tab_gmail, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1069, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1064, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -287,6 +298,10 @@ class EstyTool(object):
         self.thread_label_2.setText(_translate("MainWindow", "Path:"))
         self.delayLD_label.setText(_translate("MainWindow", "Delay:"))
         self.hidden_chrome.setText(_translate("MainWindow", "Ẩn trình duyệt"))
+        self.proxy_combobox.setItemText(0, _translate("MainWindow", "Tinsoft"))
+        self.proxy_combobox.setItemText(1, _translate("MainWindow", "ShopLike"))
+        self.delayLD_label_3.setText(_translate("MainWindow", "Proxy:"))
+        self.update_info_mail.setText(_translate("MainWindow", "Update info mail"))
         item = self.table_email.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Proxy"))
         item = self.table_email.horizontalHeaderItem(1)
@@ -366,7 +381,6 @@ class EstyTool(object):
         self.stepComboBox.setItemText(3, _translate("MainWindow", "Full"))
         self.stepComboBox.setItemText(4, _translate("MainWindow", "Khang: Check Live"))
         self.stepComboBox.setItemText(5, _translate("MainWindow", "Khang: Request"))
-        self.update_info_mail.setText(_translate("MainWindow", "Update info mail"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_easty), _translate("MainWindow", "Easty"))
         self.pass_random.setText(_translate("MainWindow", "Random"))
         self.pass_general.setText(_translate("MainWindow", "Chung"))
@@ -403,6 +417,7 @@ class EstyTool(object):
         self.btn_check_live.clicked.connect(self.OpenEsty)
         self.table_email.cellClicked.connect(self.getClickedCell)        
         self.tabWidget.currentChanged.connect(self.changeOptionsTab)
+        if os.path.exists("keyproxy.txt"): self.input_proxy.setText(open("keyproxy.txt").read())
 
     def changeOptionsTab(self, index):
         print(index)
@@ -538,11 +553,6 @@ class EstyTool(object):
         else:
             self.indexerror += 1
             self.label_error.setText(f"<p><span style=\" color:#ff0000;\"> {self.indexerror} </span></p>")
-        self.runCount -= 1
-        if self.runType == 1:
-            self.StartReg()
-        if self.runType == 2:
-            self.VerifyBank()
 
         if self.run_option == 0: #run options easty
             if (self.index == len(self.list_hostmail) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)) and self.runType == 1:
@@ -552,6 +562,7 @@ class EstyTool(object):
                 if os.path.exists(f'{self.LD_link.text().replace(".txt", "")}_finished.txt'):
                     os.remove(f'{self.LD_link.text().replace(".txt", "")}_finished.txt')
                 open(f'{self.LD_link.text().replace(".txt", "")}_finished.txt', 'a+').write("%s\n"%("Proxy|proxy Port|proxy User|proxy Pass|Email|Passmail|email KP|Fname|Lname|ssn|dl|add|city|state|zipcode|phone|dob|ACH roughting number| Bank account number|card Number| Expriation month | Expriation day | CCV | LoginSuccess | Request Status | VerifyCode | Status"))
+                index = 0
                 for data in dataSave:
                     str = ""
                     for i in data:
@@ -661,6 +672,12 @@ class EstyTool(object):
                     rowIndex += 1
                     open(f'{self.LD_link.text().replace(".txt", "")}_changemail_finished.txt', 'a+').write("%s\n"%(str))
                 self.LoadHotMail()
+
+        self.runCount -= 1
+        if self.runType == 1:
+            self.StartReg()
+        if self.runType == 2:
+            self.VerifyBank()
 
     def retriveTableData(self):
         model = self.table_email.model()
@@ -785,8 +802,10 @@ class EstyTool(object):
                             data = self.list_hostmail[self.index]
                             changePasswordType = "Random" if self.pass_random.isChecked() else "General" if self.pass_general.isChecked() else "Specific"
                             changeMailType = "Random" if self.gmail_random.isChecked() else "General" if self.gmail_general.isChecked() else "Specific"
-                            self.threadreg = StartQChangeMail(self, self.index, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
-                                                             self.change_password.isChecked(), changePasswordType, self.input_pass_general.text(),
+                            self.threadreg = StartQChangeMail(self, self.index, self.proxy_combobox.currentText(), 
+                                                              self.input_proxy.text(), data,
+                                                              self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
+                                                              self.change_password.isChecked(), changePasswordType, self.input_pass_general.text(),
                                                               self.change_mail_2.isChecked(), changeMailType, self.input_gmail_general.text())
                             self.threadreg.start()
                             self.threadreg.show.connect(self.ShowTableMailChange)
@@ -805,7 +824,8 @@ class EstyTool(object):
                         if self.runCount < int(self.threadCount.text()) and index > self.threadIndex and item is not None and index > self.lastIndex:
                             self.lastIndex = index
                             data = self.list_hostmail[index - 1]
-                            self.threadreg = StartQChangeMail(self, index - 1, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
+                            self.threadreg = StartQChangeMail(self, index - 1, self.proxy_combobox.currentText(), 
+                                                              self.input_proxy.text(), data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
                                                               self.change_password.isChecked(), changePasswordType, self.input_pass_general.text(),
                                                               self.change_mail_2.isChecked(), changeMailType, self.input_gmail_general.text())
                             self.threadreg.show.connect(self.ShowTableMailChange)
@@ -859,9 +879,11 @@ class StartQChangeMail(QtCore.QThread):
     show = QtCore.pyqtSignal(int, int, str)
     checkRegisterSuccess = QtCore.pyqtSignal(int, int, str)
     checksuccess = QtCore.pyqtSignal(bool, int, str)
-    def __init__(self, ref, index, data, runType, hiddenBrowser, changeInfoMail, changePassword, changePasswordType, password, changeMail, changeMailType, mailKP) -> None:
+    def __init__(self, ref, index, proxyType, proxyKey, data, runType, hiddenBrowser, changeInfoMail, changePassword, changePasswordType, password, changeMail, changeMailType, mailKP) -> None:
         super().__init__()
         self.ref = ref
+        self.proxyType = proxyType
+        self.proxyKey = proxyKey
         self.index = index
         self.data = data
         self.runType = runType
@@ -875,7 +897,7 @@ class StartQChangeMail(QtCore.QThread):
         self.mailKP = mailKP
 
     def run(self):
-        self.reg = ChangeGmailSelenium(self.index, self.data, self.runType, self.hiddenBrowser, 
+        self.reg = ChangeGmailSelenium(self.index, self.proxyType, self.proxyKey, self.data, self.runType, self.hiddenBrowser, 
             self.changeInfoMail, self.changePassword, self.changePasswordType, self.password, self.changeMail, self.changeMailType, self.mailKP)
         self.reg.ref = self
         self.reg.run()

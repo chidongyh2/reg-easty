@@ -1,18 +1,21 @@
 
 import random
 import time
-#from selenium import webdriver
+from selenium import webdriver
 from urllib.request import urlopen
 from colored import fg, bg, attr  # pip install colored
 import os
 import random, string
-from seleniumwire import webdriver
+#from seleniumwire import webdriver
+import requests
 # import undetected_chromedriver as uc
 class ChangeGmailSelenium:
     ref = None
     driver = None
-    def __init__(self, index: str, data: str, runType: str, hiddenBrowser, changeInfoMail, changePassword, changePasswordType, password, changeMail, changeMailType, mailKP):
+    def __init__(self, index: str, proxyType: str, proxyKey: str, data: str, runType: str, hiddenBrowser, changeInfoMail, changePassword, changePasswordType, password, changeMail, changeMailType, mailKP):
         super().__init__()
+        self.proxyType = proxyType
+        self.proxyKey = proxyKey
         self.data = data.split("|")
         self.runType = runType
         self.hiddenBrowser = hiddenBrowser
@@ -25,6 +28,8 @@ class ChangeGmailSelenium:
         self.Email = self.data[4]
         self.Password = self.data[5]
         self.EmailKP = self.data[6]
+        self.FirstName = self.data[7]
+        self.LastName = self.data[8]
         self.changeInfoMail = changeInfoMail
         self.changePassword = changePassword
         self.changePasswordType = changePasswordType
@@ -96,9 +101,70 @@ class ChangeGmailSelenium:
         except:
             return False
 
+    def changeMailInfo(self):
+        #change name
+        try:
+            self.driver.get("https://myaccount.google.com/profile/name")
+            time.sleep(5)
+            self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/div[1]/div[1]/div[2]/button').click()
+            time.sleep(3)
+            self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/span[1]/div/div/label/input').clear()
+            self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/span[2]/div/div/label/input').clear()
+            self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/span[1]/div/div/label/input').send_keys(self.FirstName)
+            self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/span[2]/div/div/label/input').send_keys(self.LastName)
+            time.sleep(3)
+            self.driver.find_element('xpath',"/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/div[3]/div[2]/div/div/button").click()
+            time.sleep(10)
+            txt = self.driver.find_element('xpath', '/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/div[1]/div[1]/div[1]/div[2]').text
+            if txt == f"{self.FirstName} {self.LastName}":
+                return True
+            else:
+                return False
+        except:
+            return False
+        
     def randomword(self, length):
         letters = string.ascii_lowercase
         return str(''.join(random.choice(letters) for i in range(length))).upper()
+
+    def GetProxy(self):
+        print("self.proxyType", self.proxyType)
+        if self.proxyType == "Tinsoft":
+            while True:
+                ip = requests.get(f"http://proxy.tinsoftsv.com/api/changeProxy.php?key={self.proxyKey}&location=0").json()
+                print(ip)
+                if ip["success"]:
+                    return ip["proxy"]
+                else:
+                    if "wrong key!" in str(ip):
+                        return "KEYEXPIRED"
+                    for ll in range(ip["next_change"], -1, -1):
+                        time.sleep(1) 
+        elif self.proxyType == "TMProxy":
+            while True:
+                ip = requests.post(f"https://tmproxy.com/api/proxy/get-new-proxy", data='{"api_key": "%s","id_location": 0}'%self.proxyKey).json()
+                if ip["code"] == 0:
+                    return ip["data"]["https"]
+                elif ip["code"] == 6:
+                    return "KEYEXPIRED"
+                else:  
+                    for ll in range(ip["data"]["next_request"], -1, -1):
+                        time.sleep(1)
+        elif self.proxyType == "ShopLike":
+            while True:
+                ip = requests.get(f"http://proxy.shoplike.vn/Api/getNewProxy?access_token={self.proxyKey}&location=&provider=").json()
+                print(ip)
+                if ip["status"] == "success":
+                    return ip["data"]["proxy"]
+                else:  
+                    if "Key khong ton tai hoac da het han" in str(ip):
+                        return "KEYEXPIRED"
+                    if "Het proxy, thu lai sau" in str(ip):
+                        for t in range(60, -1, -1):
+                            time.sleep(1)
+                        continue
+                    for ll in range(int(ip["nextChange"]), -1, -1):
+                        time.sleep(1)
             
     def run(self):
         options = webdriver.ChromeOptions()
@@ -107,20 +173,21 @@ class ChangeGmailSelenium:
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
-        options_seleniumWire = {
-            'proxy': {
-                'https': f'https://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
-                'http': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
-                'verify_ssl': False,
-            }
-        }
-        self.driver = webdriver.Chrome(options=options, seleniumwire_options=options_seleniumWire)
+        ip = self.GetProxy()
+        options.add_argument(f"--proxy-server={ip}")
+        self.driver = webdriver.Chrome(options=options)
         time.sleep(3)
         checkLogin = self.login()
         changePassWord = False
         changeMail = False
         if checkLogin == True:
             self.ref.show.emit(self.index, 5, f"Login gmail thành công")
+            if self.changeInfoMail == True:
+                changeinfo = self.changeMailInfo()
+                if changeinfo == False:
+                    self.ref.show.emit(self.index, 5, f"Change info mail thất bại vui Lòng kiểm tra lại !")
+                else:
+                    self.ref.show.emit(self.index, 5, f"Change info mail thành công !")
             if self.changePassword == True:
                 changePassWord = self.changePasswordFunc()
                 print('changePassWord', changePassWord)

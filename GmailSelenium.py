@@ -50,7 +50,9 @@ class GmailSelenium:
         except:pass
         try:self.Status = self.data[25] # Trạng thái
         except:pass
-
+        CityIP = None
+        StateIP = None
+        CountryIP = None
         
     def login(self):
         try:
@@ -102,10 +104,11 @@ class GmailSelenium:
     def loginEasty(self):
         try:
             self.driver.get("https://www.etsy.com/")
-            time.sleep(5)
+            time.sleep(8)
             try:
+                print("what happend")
                 main_page = self.driver.current_window_handle
-    
+                print("what happend 2")
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
                 time.sleep(15)
                 try:
@@ -676,11 +679,68 @@ class GmailSelenium:
             print("except bypass ID upload")
             pass
 
+    def eastyLive(self):
+        try:
+            self.driver.get("https://www.etsy.com/your/shops/me/dashboard")
+            time.sleep(20) 
+            self.driver.find_element('xpath', "//*[contains(@id, 'wt-banner')]/div/div[1]/div[2]/div/p[1]")
+            return False
+        except:
+            return True
+    
+    def getLocationAddress(self):
+        self.driver.get("https://ipaddress.my")
+        time.sleep(15)
+        self.CityIP = self.driver.find_element('xpath', '/html/body/div[1]/div[3]/div[2]/table/tbody/tr[4]/td[2]').text
+        self.StateIP = self.driver.find_element('xpath', '/html/body/div[1]/div[3]/div[2]/table/tbody/tr[6]/td[2]').text
+        self.CountryIP = self.driver.find_element('xpath', '/html/body/div[1]/div[3]/div[2]/table/tbody/tr[5]/td[2]').text
+        print(self.CityIP)
     def requestKhang(self):
         try:
-            self.driver.get("https://accounts.google.com/")
-            time.sleep(8)
-            return True
+            self.getLocationAddress()
+            time.sleep(5)
+            self.driver.get("https://www.etsy.com/your/shops/me/dashboard")
+            time.sleep(20) 
+            data = self.driver.find_element('xpath', "//*[contains(@id, 'wt-banner')]/div/div[1]/div[2]/div/p[1]")
+            print(data)
+            self.driver.find_element('xpath', "//*[contains(@id, 'wt-banner')]/div/div[2]/a[2]")
+            self.driver.get("https://www.etsy.com/appeals")
+            time.sleep(20)
+            
+            if self.driver.find_element('xpath', '//*[@id="content"]/div[1]/h2').text == 'Your appeal has been submitted':
+                return True
+            
+            self.driver.find_element('id', "name").send_keys(f"{self.FirstName} {self.LastName}")
+            item_type = Select(self.driver.find_element('id','item_type'))
+            item_type.select_by_visible_text("Items that I make") 
+            self.driver.find_element('id', "locations").send_keys(f"City: {self.CityIP} \nState: {self.StateIP} \nCountry: {self.CountryIP}")
+            self.driver.execute_script("arguments[0].click();", self.driver.find_element('id',"other"))
+            time.sleep(3)
+            question1 = open('source-request-1.txt', 'r')
+            if question1: 
+                data_question1 = question1.readlines()
+                self.driver.find_element('id', "other_reason").send_keys(f"{str(data_question1[random.randrange(0,35)])}")
+            question2 = open('source-request-2.txt', 'r')
+            if question2: 
+                data_question2 = question2.readlines()
+                self.driver.find_element('id', "action_taken").send_keys(f"{str(data_question2[random.randrange(0,35)])}")
+            question3 = open('source-request-3.txt', 'r')
+            if question3: 
+                data_question3 = question3.readlines()
+                self.driver.find_element('id', "how_will_business_change").send_keys(f"{str(data_question3[random.randrange(0,35)])}")
+            question4 = open('source-request-4.txt', 'r')
+            if question4: 
+                data_question4 = question4.readlines()
+                self.driver.find_element('id', "extenuating_circumstances-textarea").send_keys(f"{str(data_question4[random.randrange(0,35)])}")
+            
+            self.driver.find_element('id', "appeals-submit-button").click()
+            time.sleep(10)
+            try:
+                if self.driver.find_element('id', "appeals-submit-button"):
+                    return False
+            except:
+                
+                return True
         except:
             return False
     
@@ -688,6 +748,7 @@ class GmailSelenium:
         options = webdriver.ChromeOptions()
         #self.__SetProxy(options)
         options.add_argument('--disable-blink-features=AutomationControlled')
+        #options.add_argument('--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints')
         options.add_experimental_option("useAutomationExtension", False)
         options.add_experimental_option("excludeSwitches",["enable logging"])
         options.add_experimental_option("excludeSwitches", ["enable automation"])
@@ -703,38 +764,46 @@ class GmailSelenium:
         time.sleep(3)
         checkLogin = self.login()
         if checkLogin == True:
-            self.ref.show.emit(self.index, 19, f"Login gmail thành công")
-            if self.changeInfoMail == True:
-                changeinfo = self.changeMailInfo()
-                if changeinfo == False:
-                    self.ref.show.emit(self.index, 19, f"Change info mail thất bại vui Lòng kiểm tra lại !")
-                else:
-                    self.ref.show.emit(self.index, 19, f"Change info mail thành công !")
+            self.ref.show.emit(self.index, 21, f"Login gmail thành công")
             loginEasty = self.loginEasty()
             if loginEasty == True:
-                self.ref.show.emit(self.index, 19, f"Login easty thành công")
+                self.ref.show.emit(self.index, 21, f"Login easty thành công")
                 if self.runType == 'AddName' or self.runType == 'CreateShop' or self.runType == 'Full':
                     registerShop = self.registerShopEasty()
                     if registerShop == True:
                         self.ref.checksuccess.emit(True, self.index, "register")
 
                     else: 
-                        self.ref.show.emit(self.index, 19, f"Đăng ký tài khoản không thành công vui lòng kiểm tra lại")
+                        self.ref.show.emit(self.index, 21, f"Đăng ký tài khoản không thành công vui lòng kiểm tra lại")
                         self.ref.checksuccess.emit(False, self.index, "register")
                 elif self.runType == 'Login':
                     self.ref.checksuccess.emit(True, self.index, "register")
                 elif self.runType == 'Khang: Check Live':
-                    self.ref.checksuccess.emit(True, self.index, "register")
+                    checkLive = self.eastyLive()
+                    if checkLive == True:
+                        self.ref.show.emit(self.index, 18, f"Live")
+                        self.ref.checksuccess.emit(True, self.index, "CheckLive")
+                    else:
+                        self.ref.show.emit(self.index, 18, f"Die")
+                        self.ref.checksuccess.emit(True, self.index, "CheckLive")
                 else:
                     #request kháng
                     requestKhang = self.requestKhang()
+                    if requestKhang == True:
+                        self.ref.show.emit(self.index, 19, f"Đã gửi")
+                        self.ref.show.emit(self.index, 21, f"Đã gửi và chờ response")
+                        self.ref.checksuccess.emit(True, self.index, "RequestKhang")
+                    else:
+                        self.ref.show.emit(self.index, 19, f"Lỗi gửi")
+                        self.ref.show.emit(self.index, 21, f"Lỗi gửi")
+                        self.ref.checksuccess.emit(False, self.index, "RequestKhang")
             else:
-                self.ref.show.emit(self.index, 19, f"Login easty thất bại")
+                self.ref.show.emit(self.index, 21, f"Login easty thất bại")
                 self.ref.checksuccess.emit(False, self.index, "register")
             
 
         if checkLogin == False:
-            self.ref.show.emit(self.index, 19, f"Login gmail thất bại")
+            self.ref.show.emit(self.index, 21, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "register")  
         #protected account
         time.sleep(1)
