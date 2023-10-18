@@ -87,7 +87,9 @@ class ChangeGmailSelenium:
             time.sleep(8)
             self.driver.find_element('id', 'i5').clear()
             time.sleep(1)
+            print("self.newmailKP", self.newmailKP)
             self.driver.find_element('id', 'i5').send_keys(self.newmailKP)
+            time.sleep(2)
             try:
                     self.driver.find_element('xpath', '/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[1]/div[4]/div/form/div/div[2]/div[2]').click()
             except:
@@ -190,7 +192,6 @@ class ChangeGmailSelenium:
                     self.ref.show.emit(self.index, 5, f"Change info mail thành công !")
             if self.changePassword == True:
                 changePassWord = self.changePasswordFunc()
-                print('changePassWord', changePassWord)
                 if changePassWord == True:
                     self.ref.show.emit(self.index, 5, f"Change pass thành công")    
 

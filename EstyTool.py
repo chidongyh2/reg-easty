@@ -5,6 +5,9 @@ import os, time
 from LoginSelenium import LoginSelenium
 from VerrifyBankSelenium import VerifyBankSelenium
 import threading
+import random
+import time
+import string
 class EstyTool(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -619,7 +622,7 @@ class EstyTool(object):
             if (self.index == len(self.list_hostmail) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)):
                 self.runningJob = False
                 self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
-                dataGmail = list(self.retriveTableData())
+                dataGmail = list(self.retriveTableDataGmail())
                 dataSave = list(self.retriveTableData())
                 if os.path.exists(fr'{self.LD_link.text().replace(".txt", "")}_changemail_finished.txt'):
                     os.remove(fr'{self.LD_link.text().replace(".txt", "")}_changemail_finished.txt')
@@ -760,6 +763,10 @@ class EstyTool(object):
             self.runningJob = True
             self.StartReg()
 
+    def randomword(self, length):
+        letters = string.ascii_lowercase
+        return str(''.join(random.choice(letters) for i in range(length))).upper()
+
     def StartReg(self):
         if self.run_option == 0: # run easty
             if self.list_selected is None or len(self.list_selected) == 0:
@@ -802,11 +809,29 @@ class EstyTool(object):
                             data = self.list_hostmail[self.index]
                             changePasswordType = "Random" if self.pass_random.isChecked() else "General" if self.pass_general.isChecked() else "Specific"
                             changeMailType = "Random" if self.gmail_random.isChecked() else "General" if self.gmail_general.isChecked() else "Specific"
+                            passwordUpdate = None
+                            if changePasswordType == "Specific":
+                                tableData = self.retriveTableDataGmail()
+                                passwordUpdate = tableData[self.index][4]
+                            elif changePasswordType == "General":
+                                passwordUpdate = self.input_pass_general.text()
+                            else:
+                                passwordUpdate = self.randomword(10)
+                            self.ShowTableMailChange(self.index, 4, passwordUpdate)
+                            mailUpdate = None
+                            if changeMailType == "Specific":
+                                tableData = self.retriveTableDataGmail()
+                                mailUpdate = tableData[self.index][5]
+                            elif changeMailType == "General":
+                                mailUpdate = self.input_gmail_general.text()
+                            else:
+                                mailUpdate = self.input_gmail_general.text()
+                            self.ShowTableMailChange(self.index, 5, mailUpdate)
                             self.threadreg = StartQChangeMail(self, self.index, self.proxy_combobox.currentText(), 
                                                               self.input_proxy.text(), data,
                                                               self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
-                                                              self.change_password.isChecked(), changePasswordType, self.input_pass_general.text(),
-                                                              self.change_mail_2.isChecked(), changeMailType, self.input_gmail_general.text())
+                                                              self.change_password.isChecked(), changePasswordType, passwordUpdate,
+                                                              self.change_mail_2.isChecked(), changeMailType, mailUpdate)
                             self.threadreg.start()
                             self.threadreg.show.connect(self.ShowTableMailChange)
                             self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
@@ -824,10 +849,30 @@ class EstyTool(object):
                         if self.runCount < int(self.threadCount.text()) and index > self.threadIndex and item is not None and index > self.lastIndex:
                             self.lastIndex = index
                             data = self.list_hostmail[index - 1]
+                            changePasswordType = "Random" if self.pass_random.isChecked() else "General" if self.pass_general.isChecked() else "Specific"
+                            changeMailType = "Random" if self.gmail_random.isChecked() else "General" if self.gmail_general.isChecked() else "Specific"
+                            passwordUpdate = None
+                            if changePasswordType == "Specific":
+                                tableData = self.retriveTableDataGmail()
+                                passwordUpdate = tableData[self.index - 1][4]
+                            elif changePasswordType == "General":
+                                passwordUpdate = self.input_pass_general.text()
+                            else:
+                                passwordUpdate = self.randomword(8, 15)
+                            self.ShowTableMailChange(self.index - 1, 4, passwordUpdate)
+                            mailUpdate = None
+                            if changeMailType == "Specific":
+                                tableData = self.retriveTableDataGmail()
+                                mailUpdate = tableData[self.index - 1][5]
+                            elif changeMailType == "General":
+                                mailUpdate = self.input_gmail_general.text()
+                            else:
+                                mailUpdate = self.input_gmail_general.text()
+                            self.ShowTableMailChange(self.index - 1, 5, mailUpdate)
                             self.threadreg = StartQChangeMail(self, index - 1, self.proxy_combobox.currentText(), 
                                                               self.input_proxy.text(), data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
-                                                              self.change_password.isChecked(), changePasswordType, self.input_pass_general.text(),
-                                                              self.change_mail_2.isChecked(), changeMailType, self.input_gmail_general.text())
+                                                              self.change_password.isChecked(), changePasswordType, passwordUpdate,
+                                                              self.change_mail_2.isChecked(), changeMailType, mailUpdate)
                             self.threadreg.show.connect(self.ShowTableMailChange)
                             self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
                             self.listthread.append(self.threadreg)

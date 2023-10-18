@@ -106,11 +106,9 @@ class GmailSelenium:
             self.driver.get("https://www.etsy.com/")
             time.sleep(8)
             try:
-                print("what happend")
                 main_page = self.driver.current_window_handle
-                print("what happend 2")
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
-                time.sleep(15)
+                time.sleep(20)
                 try:
                     self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
                 except:
@@ -124,7 +122,7 @@ class GmailSelenium:
                 self.driver.switch_to.window(login_page)
                 mail =  self.driver.find_element('xpath','//*[@id="view_container"]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div/div/ul/li[1]/div')
                 mail.click()
-                time.sleep(15)
+                time.sleep(20)
                 # change control to main page
                 self.driver.switch_to.window(main_page)
                 return True
