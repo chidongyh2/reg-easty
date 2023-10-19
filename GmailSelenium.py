@@ -71,11 +71,28 @@ class GmailSelenium:
             except:
                 pass
             time.sleep(15)
-            try:
+            try:     
                 if self.driver.find_element("id",'email') or self.driver.find_element("id", 'pass'):
                     return False
             except:
-                return True
+                try:
+                    if self.driver.find_element("xpath", '//*[@id="headingText"]/span').text == "Verify it’s you":
+                        try:
+                            if self.driver.find_element("xpath", '/html/body/div[1]/div[1]/div[2]/div/c-wiz/div/div[2]/div/div[1]/div/form/span/section[2]/div/div/section/div/div/div/ul/li[4]'):
+                                self.driver.find_element("xpath", '/html/body/div[1]/div[1]/div[2]/div/c-wiz/div/div[2]/div/div[1]/div/form/span/section[2]/div/div/section/div/div/div/ul/li[3]').click()
+                                time.sleep(5)
+                                self.driver.find_element('id', 'knowledge-preregistered-email-response').send_keys(self.EmailKP)
+                                time.sleep(1)
+                                self.driver.find_element('xpath', '//*[@id="view_container"]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button').click()
+                                time.sleep(8)
+                                try:
+                                    if self.driver.find_element('id', 'knowledge-preregistered-email-response'):
+                                        return False
+                                except:
+                                    return True
+                        except: pass # case có cả fone
+                except:
+                    return True
         except:
             return False
     
@@ -104,7 +121,7 @@ class GmailSelenium:
     def loginEasty(self):
         try:
             self.driver.get("https://www.etsy.com/")
-            time.sleep(8)
+            time.sleep(15)
             try:
                 main_page = self.driver.current_window_handle
                 self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
@@ -704,10 +721,11 @@ class GmailSelenium:
             self.driver.find_element('xpath', "//*[contains(@id, 'wt-banner')]/div/div[2]/a[2]")
             self.driver.get("https://www.etsy.com/appeals")
             time.sleep(20)
-            
-            if self.driver.find_element('xpath', '//*[@id="content"]/div[1]/h2').text == 'Your appeal has been submitted':
-                return True
-            
+            try:
+                if self.driver.find_element('xpath', '//*[@id="content"]/div[1]/h2').text == 'Your appeal has been submitted':
+                    return True
+            except:pass
+            time.sleep(2)
             self.driver.find_element('id', "name").send_keys(f"{self.FirstName} {self.LastName}")
             item_type = Select(self.driver.find_element('id','item_type'))
             item_type.select_by_visible_text("Items that I make") 
@@ -730,7 +748,7 @@ class GmailSelenium:
             if question4: 
                 data_question4 = question4.readlines()
                 self.driver.find_element('id', "extenuating_circumstances-textarea").send_keys(f"{str(data_question4[random.randrange(0,35)])}")
-            
+            time.sleep(5)
             self.driver.find_element('id', "appeals-submit-button").click()
             time.sleep(10)
             try:

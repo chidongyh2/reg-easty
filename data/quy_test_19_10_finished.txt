@@ -1,0 +1,2 @@
+Proxy|proxy Port|proxy User|proxy Pass|Email|Passmail|email KP|Fname|Lname|ssn|dl|add|city|state|zipcode|phone|dob|ACH roughting number| Bank account number|card Number| Expriation month | Expriation day | CCV | LoginSuccess | Request Status | VerifyCode | Status
+us.smartproxy.com|10237|spwjxxce14|c4l0sn6wnziKRjj2VE|mdsadidulislamsadid@gmail.com|mdsadidulislamsadid959411|hung.dragon2023@gmail.com|Michael A Lundquist David|553815955|507|oak st|calumet|MI|49913|9063370742|63084|121000248|71840000003298864|5374921127022766|10/26/904|None|None|Đã gửi|None|Đã gửi và chờ response

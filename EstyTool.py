@@ -16,52 +16,52 @@ class EstyTool(object):
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setEnabled(True)
-        self.groupBox_2.setGeometry(QtCore.QRect(10, 0, 341, 171))
+        self.groupBox_2.setGeometry(QtCore.QRect(10, 0, 386, 171))
         self.groupBox_2.setInputMethodHints(QtCore.Qt.ImhNone)
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
         self.label_15 = QtWidgets.QLabel(self.groupBox_2)
-        self.label_15.setGeometry(QtCore.QRect(30, 60, 51, 20))
+        self.label_15.setGeometry(QtCore.QRect(30, 50, 51, 20))
         self.label_15.setObjectName("label_15")
         self.threadCount = QtWidgets.QSpinBox(self.groupBox_2)
-        self.threadCount.setGeometry(QtCore.QRect(90, 60, 42, 20))
+        self.threadCount.setGeometry(QtCore.QRect(90, 50, 42, 20))
         self.threadCount.setProperty("value", 2)
         self.threadCount.setObjectName("threadCount")
         self.LD_link = QtWidgets.QLineEdit(self.groupBox_2)
-        self.LD_link.setGeometry(QtCore.QRect(58, 20, 221, 20))
+        self.LD_link.setGeometry(QtCore.QRect(58, 20, 251, 20))
         self.LD_link.setObjectName("LD_link")
         self.btn_LD_link = QtWidgets.QToolButton(self.groupBox_2)
-        self.btn_LD_link.setGeometry(QtCore.QRect(290, 20, 31, 21))
+        self.btn_LD_link.setGeometry(QtCore.QRect(320, 20, 31, 21))
         self.btn_LD_link.setObjectName("btn_LD_link")
         self.thread_label_2 = QtWidgets.QLabel(self.groupBox_2)
         self.thread_label_2.setGeometry(QtCore.QRect(25, 20, 31, 20))
         self.thread_label_2.setObjectName("thread_label_2")
         self.delayLD_input = QtWidgets.QSpinBox(self.groupBox_2)
-        self.delayLD_input.setGeometry(QtCore.QRect(90, 90, 41, 20))
+        self.delayLD_input.setGeometry(QtCore.QRect(90, 80, 41, 20))
         self.delayLD_input.setProperty("value", 1)
         self.delayLD_input.setObjectName("delayLD_input")
         self.delayLD_label = QtWidgets.QLabel(self.groupBox_2)
-        self.delayLD_label.setGeometry(QtCore.QRect(39, 90, 47, 20))
+        self.delayLD_label.setGeometry(QtCore.QRect(39, 80, 47, 20))
         self.delayLD_label.setObjectName("delayLD_label")
         self.hidden_chrome = QtWidgets.QCheckBox(self.groupBox_2)
-        self.hidden_chrome.setGeometry(QtCore.QRect(150, 60, 91, 20))
+        self.hidden_chrome.setGeometry(QtCore.QRect(180, 50, 91, 20))
         self.hidden_chrome.setChecked(True)
         self.hidden_chrome.setObjectName("hidden_chrome")
         self.proxy_combobox = QtWidgets.QComboBox(self.groupBox_2)
-        self.proxy_combobox.setGeometry(QtCore.QRect(50, 130, 81, 20))
+        self.proxy_combobox.setGeometry(QtCore.QRect(50, 120, 61, 20))
         self.proxy_combobox.setObjectName("proxy_combobox")
         self.proxy_combobox.addItem("")
         self.proxy_combobox.addItem("")
         self.delayLD_label_3 = QtWidgets.QLabel(self.groupBox_2)
-        self.delayLD_label_3.setGeometry(QtCore.QRect(10, 130, 41, 20))
+        self.delayLD_label_3.setGeometry(QtCore.QRect(10, 120, 41, 20))
         self.delayLD_label_3.setObjectName("delayLD_label_3")
-        self.input_proxy = QtWidgets.QLineEdit(self.groupBox_2)
-        self.input_proxy.setGeometry(QtCore.QRect(140, 130, 191, 20))
-        self.input_proxy.setObjectName("input_proxy")
         self.update_info_mail = QtWidgets.QCheckBox(self.groupBox_2)
-        self.update_info_mail.setGeometry(QtCore.QRect(150, 90, 101, 20))
+        self.update_info_mail.setGeometry(QtCore.QRect(180, 80, 101, 20))
         self.update_info_mail.setChecked(True)
         self.update_info_mail.setObjectName("update_info_mail")
+        self.input_proxy = QtWidgets.QPlainTextEdit(self.groupBox_2)
+        self.input_proxy.setGeometry(QtCore.QRect(119, 102, 262, 61))
+        self.input_proxy.setObjectName("input_proxy")
         self.tab_easty_data = QtWidgets.QTabWidget(self.centralwidget)
         self.tab_easty_data.setGeometry(QtCore.QRect(10, 220, 1051, 621))
         self.tab_easty_data.setObjectName("tab_easty_data")
@@ -210,12 +210,12 @@ class EstyTool(object):
         self.label_running_status.setObjectName("label_running_status")
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setEnabled(True)
-        self.groupBox_3.setGeometry(QtCore.QRect(360, 0, 681, 171))
+        self.groupBox_3.setGeometry(QtCore.QRect(400, 0, 641, 171))
         self.groupBox_3.setInputMethodHints(QtCore.Qt.ImhNone)
         self.groupBox_3.setTitle("")
         self.groupBox_3.setObjectName("groupBox_3")
         self.tabWidget = QtWidgets.QTabWidget(self.groupBox_3)
-        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 661, 151))
+        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 625, 151))
         self.tabWidget.setObjectName("tabWidget")
         self.tab_easty = QtWidgets.QWidget()
         self.tab_easty.setObjectName("tab_easty")
@@ -249,7 +249,7 @@ class EstyTool(object):
         self.pass_specific = QtWidgets.QRadioButton(self.select_password)
         self.pass_specific.setObjectName("pass_specific")
         self.input_pass_general = QtWidgets.QLineEdit(self.tab_gmail)
-        self.input_pass_general.setGeometry(QtCore.QRect(190, 50, 111, 20))
+        self.input_pass_general.setGeometry(QtCore.QRect(190, 50, 121, 20))
         self.input_pass_general.setObjectName("input_pass_general")
         self.label_8 = QtWidgets.QLabel(self.tab_gmail)
         self.label_8.setGeometry(QtCore.QRect(190, 30, 111, 16))
@@ -269,7 +269,7 @@ class EstyTool(object):
         self.label_9.setGeometry(QtCore.QRect(510, 30, 111, 16))
         self.label_9.setObjectName("label_9")
         self.input_gmail_general = QtWidgets.QLineEdit(self.tab_gmail)
-        self.input_gmail_general.setGeometry(QtCore.QRect(510, 50, 141, 20))
+        self.input_gmail_general.setGeometry(QtCore.QRect(510, 50, 101, 20))
         self.input_gmail_general.setObjectName("input_gmail_general")
         self.change_password = QtWidgets.QCheckBox(self.tab_gmail)
         self.change_password.setGeometry(QtCore.QRect(10, 45, 91, 17))
@@ -389,7 +389,7 @@ class EstyTool(object):
         self.pass_general.setText(_translate("MainWindow", "Chung"))
         self.pass_specific.setText(_translate("MainWindow", "Riêng"))
         self.label_8.setText(_translate("MainWindow", "Pass chung"))
-        self.gmail_random.setText(_translate("MainWindow", "Random"))
+        self.gmail_random.setText(_translate("MainWindow", "Thêm đuôi"))
         self.gmail_general.setText(_translate("MainWindow", "Chung"))
         self.gmail_specific.setText(_translate("MainWindow", "Riêng"))
         self.label_9.setText(_translate("MainWindow", "Mail Chung"))
@@ -418,9 +418,10 @@ class EstyTool(object):
         self.btn_start.clicked.connect(self.StartRegAction)
         self.btn_verify_bank.clicked.connect(self.VerifyBankAction)
         self.btn_check_live.clicked.connect(self.OpenEsty)
+        self.table_email.cellClicked.connect(self.getClickedCell)
         self.table_email.cellClicked.connect(self.getClickedCell)        
         self.tabWidget.currentChanged.connect(self.changeOptionsTab)
-        if os.path.exists("keyproxy.txt"): self.input_proxy.setText(open("keyproxy.txt").read())
+        if os.path.exists("keyproxy.txt"): self.input_proxy.setPlainText(open("keyproxy.txt").read())
 
     def changeOptionsTab(self, index):
         print(index)
@@ -494,19 +495,21 @@ class EstyTool(object):
             self.ShowTable(i, 2, mail[5])
             self.ShowTable(i, 3, mail[6])
             self.ShowTable(i, 4, f"{mail[7]} {mail[8]}")
-            self.ShowTable(i, 5, mail[9])
-            self.ShowTable(i, 6, mail[10])
-            self.ShowTable(i, 7, mail[11])
-            self.ShowTable(i, 8, mail[12])
-            self.ShowTable(i, 9, mail[13])
-            self.ShowTable(i, 10, mail[14])
-            self.ShowTable(i, 11, mail[15])
-            self.ShowTable(i, 12, mail[16])
-            self.ShowTable(i, 13, mail[17])
-            self.ShowTable(i, 14, mail[18])
-            self.ShowTable(i, 15, mail[19])
-            self.ShowTable(i, 16, f"{mail[20]}/{mail[21]}")
-            self.ShowTable(i, 17, mail[22])
+            try:
+                self.ShowTable(i, 5, mail[9])
+                self.ShowTable(i, 6, mail[10])
+                self.ShowTable(i, 7, mail[11])
+                self.ShowTable(i, 8, mail[12])
+                self.ShowTable(i, 9, mail[13])
+                self.ShowTable(i, 10, mail[14])
+                self.ShowTable(i, 11, mail[15])
+                self.ShowTable(i, 12, mail[16])
+                self.ShowTable(i, 13, mail[17])
+                self.ShowTable(i, 14, mail[18])
+                self.ShowTable(i, 15, mail[19])
+                self.ShowTable(i, 16, f"{mail[20]}/{mail[21]}")
+                self.ShowTable(i, 17, mail[22])
+            except: pass
             try:
                 self.ShowTable(i, 18, mail[23])
                 self.ShowTable(i, 19, mail[24])
@@ -674,7 +677,6 @@ class EstyTool(object):
                         index += 1
                     rowIndex += 1
                     open(f'{self.LD_link.text().replace(".txt", "")}_changemail_finished.txt', 'a+').write("%s\n"%(str))
-                self.LoadHotMail()
 
         self.runCount -= 1
         if self.runType == 1:
@@ -783,6 +785,7 @@ class EstyTool(object):
                             self.Delay(1)
                             self.index += 1
                             print('self', self.index, self.runCount)
+                            self.Delay(self.delayLD_input.value())
             else:
                 if len(self.list_selected) > self.threadIndex:
                     index = 0
@@ -825,10 +828,13 @@ class EstyTool(object):
                             elif changeMailType == "General":
                                 mailUpdate = self.input_gmail_general.text()
                             else:
-                                mailUpdate = self.input_gmail_general.text()
+                                mailUpdate = f'{str(data.split("|")[4]).split("@")[0]}{self.input_gmail_general.text()}'
                             self.ShowTableMailChange(self.index, 5, mailUpdate)
+                            keys = self.input_proxy.toPlainText().splitlines()
+                            key = keys[self.index] if len(keys) <= self.index else keys[self.index % len(keys)]
+                            print('key', key)
                             self.threadreg = StartQChangeMail(self, self.index, self.proxy_combobox.currentText(), 
-                                                              self.input_proxy.text(), data,
+                                                              key, data,
                                                               self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
                                                               self.change_password.isChecked(), changePasswordType, passwordUpdate,
                                                               self.change_mail_2.isChecked(), changeMailType, mailUpdate)
@@ -837,9 +843,10 @@ class EstyTool(object):
                             self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
                             self.listthread.append(self.threadreg)
                             self.runCount += 1
-                            self.Delay(1)
                             self.index += 1
+                            self.Delay(1)
                             print('self', self.index, self.runCount)
+                            self.Delay(self.delayLD_input.value())
             else:
                 if len(self.list_selected) > self.threadIndex:
                     index = 0
@@ -858,7 +865,7 @@ class EstyTool(object):
                             elif changePasswordType == "General":
                                 passwordUpdate = self.input_pass_general.text()
                             else:
-                                passwordUpdate = self.randomword(8, 15)
+                                passwordUpdate = self.randomword(8)
                             self.ShowTableMailChange(self.index - 1, 4, passwordUpdate)
                             mailUpdate = None
                             if changeMailType == "Specific":
@@ -867,10 +874,12 @@ class EstyTool(object):
                             elif changeMailType == "General":
                                 mailUpdate = self.input_gmail_general.text()
                             else:
-                                mailUpdate = self.input_gmail_general.text()
+                                mailUpdate = f'{str(data.split("|")[4]).split("@")[0]}{self.input_gmail_general.text()}'
                             self.ShowTableMailChange(self.index - 1, 5, mailUpdate)
+                            keys = self.input_proxy.toPlainText().splitlines()
+                            key = keys[index] if len(keys) <= index else keys[index % len(keys)]
                             self.threadreg = StartQChangeMail(self, index - 1, self.proxy_combobox.currentText(), 
-                                                              self.input_proxy.text(), data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
+                                                              key, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
                                                               self.change_password.isChecked(), changePasswordType, passwordUpdate,
                                                               self.change_mail_2.isChecked(), changeMailType, mailUpdate)
                             self.threadreg.show.connect(self.ShowTableMailChange)
@@ -879,6 +888,7 @@ class EstyTool(object):
                             self.threadreg.start()
                             self.runCount += 1
                             self.threadIndex += 1
+                            self.Delay(1)
                             print('self', index, self.runCount)
                             self.Delay(self.delayLD_input.value())
 

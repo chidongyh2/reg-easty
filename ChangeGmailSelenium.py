@@ -55,11 +55,28 @@ class ChangeGmailSelenium:
             except:
                 pass
             time.sleep(15)
-            try:
+            try:     
                 if self.driver.find_element("id",'email') or self.driver.find_element("id", 'pass'):
                     return False
             except:
-                return True
+                try:
+                    if self.driver.find_element("xpath", '//*[@id="headingText"]/span').text == "Verify it’s you":
+                        try:
+                            if self.driver.find_element("xpath", '/html/body/div[1]/div[1]/div[2]/div/c-wiz/div/div[2]/div/div[1]/div/form/span/section[2]/div/div/section/div/div/div/ul/li[4]'):
+                                self.driver.find_element("xpath", '/html/body/div[1]/div[1]/div[2]/div/c-wiz/div/div[2]/div/div[1]/div/form/span/section[2]/div/div/section/div/div/div/ul/li[3]').click()
+                                time.sleep(5)
+                                self.driver.find_element('id', 'knowledge-preregistered-email-response').send_keys(self.EmailKP)
+                                time.sleep(1)
+                                self.driver.find_element('xpath', '//*[@id="view_container"]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button').click()
+                                time.sleep(8)
+                                try:
+                                    if self.driver.find_element('id', 'knowledge-preregistered-email-response'):
+                                        return False
+                                except:
+                                    return True
+                        except: pass # case có cả fone
+                except:
+                    return True
         except:
             return False
 
@@ -87,7 +104,6 @@ class ChangeGmailSelenium:
             time.sleep(8)
             self.driver.find_element('id', 'i5').clear()
             time.sleep(1)
-            print("self.newmailKP", self.newmailKP)
             self.driver.find_element('id', 'i5').send_keys(self.newmailKP)
             time.sleep(2)
             try:
@@ -107,9 +123,25 @@ class ChangeGmailSelenium:
         #change name
         try:
             self.driver.get("https://myaccount.google.com/profile/name")
-            time.sleep(5)
+            time.sleep(8)
+            main_page = self.driver.current_window_handle
+            try:
+                self.driver.switch_to.frame(self.driver.find_element("name", "callout"))
+                time.sleep(1)
+                if self.driver.find_element('xpath','/html/body/div/c-wiz/div/div/c-wiz/div/div/div[1]/button'):
+                    self.driver.find_element('xpath','/html/body/div/c-wiz/div/div/c-wiz/div/div/div[1]/button').click()
+                    self.driver.switch_to.window(main_page)
+            except:pass
             self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/div[1]/div[1]/div[2]/button').click()
             time.sleep(3)
+            try:
+                self.driver.switch_to.frame(self.driver.find_element("name", "callout"))
+                time.sleep(1)
+                if self.driver.find_element('xpath','/html/body/div/c-wiz/div/div/c-wiz/div/div/div[1]/button'):
+                    self.driver.find_element('xpath','/html/body/div/c-wiz/div/div/c-wiz/div/div/div[1]/button').click()
+                    self.driver.switch_to.window(main_page)
+                    time.sleep(2)
+            except:pass
             self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/span[1]/div/div/label/input').clear()
             self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/span[2]/div/div/label/input').clear()
             self.driver.find_element('xpath','/html/body/c-wiz/div/div[2]/div[2]/c-wiz/div[2]/div/div/span[1]/div/div/label/input').send_keys(self.FirstName)
@@ -183,27 +215,27 @@ class ChangeGmailSelenium:
         changePassWord = False
         changeMail = False
         if checkLogin == True:
-            self.ref.show.emit(self.index, 5, f"Login gmail thành công")
+            self.ref.show.emit(self.index, 6, f"Login gmail thành công")
             if self.changeInfoMail == True:
                 changeinfo = self.changeMailInfo()
                 if changeinfo == False:
-                    self.ref.show.emit(self.index, 5, f"Change info mail thất bại vui Lòng kiểm tra lại !")
+                    self.ref.show.emit(self.index, 6, f"Change info mail thất bại vui Lòng kiểm tra lại !")
                 else:
-                    self.ref.show.emit(self.index, 5, f"Change info mail thành công !")
+                    self.ref.show.emit(self.index, 6, f"Change info mail thành công !")
             if self.changePassword == True:
                 changePassWord = self.changePasswordFunc()
                 if changePassWord == True:
-                    self.ref.show.emit(self.index, 5, f"Change pass thành công")    
+                    self.ref.show.emit(self.index, 6, f"Change pass thành công")    
 
             if self.changeMail == True:
                 changeMail = self.changeMailFunc()
                 if changeMail == True:
-                    self.ref.show.emit(self.index, 5, f"Change gmail thành công")    
+                    self.ref.show.emit(self.index, 6, f"Change gmail thành công")    
 
             self.ref.checksuccess.emit(True, self.index, f"{str(changePassWord)}|{str(changeMail)}")  
 
         if checkLogin == False:
-            self.ref.show.emit(self.index, 5, f"Login gmail thất bại")
+            self.ref.show.emit(self.index, 6, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "register")  
         #protected account
         time.sleep(1)
