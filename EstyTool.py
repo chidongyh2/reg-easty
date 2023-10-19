@@ -831,7 +831,7 @@ class EstyTool(object):
                                 mailUpdate = f'{str(data.split("|")[4]).split("@")[0]}{self.input_gmail_general.text()}'
                             self.ShowTableMailChange(self.index, 5, mailUpdate)
                             keys = self.input_proxy.toPlainText().splitlines()
-                            key = keys[self.index] if len(keys) <= self.index else keys[self.index % len(keys)]
+                            key = keys[self.index] if len(keys) > self.index else keys[self.index % len(keys)]
                             print('key', key)
                             self.threadreg = StartQChangeMail(self, self.index, self.proxy_combobox.currentText(), 
                                                               key, data,
@@ -877,7 +877,7 @@ class EstyTool(object):
                                 mailUpdate = f'{str(data.split("|")[4]).split("@")[0]}{self.input_gmail_general.text()}'
                             self.ShowTableMailChange(self.index - 1, 5, mailUpdate)
                             keys = self.input_proxy.toPlainText().splitlines()
-                            key = keys[index] if len(keys) <= index else keys[index % len(keys)]
+                            key = keys[index - 1] if len(keys) >= index - 1 else keys[index % len(keys)]
                             self.threadreg = StartQChangeMail(self, index - 1, self.proxy_combobox.currentText(), 
                                                               key, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
                                                               self.change_password.isChecked(), changePasswordType, passwordUpdate,
