@@ -278,6 +278,12 @@ class EstyTool(object):
         self.change_mail_2.setGeometry(QtCore.QRect(330, 45, 81, 17))
         self.change_mail_2.setObjectName("change_mail_2")
         self.tabWidget.addTab(self.tab_gmail, "")
+        self.label_selected = QtWidgets.QLabel(self.centralwidget)
+        self.label_selected.setGeometry(QtCore.QRect(765, 190, 51, 16))
+        self.label_selected.setObjectName("label_selected")
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(700, 190, 61, 16))
+        self.label_3.setObjectName("label_3")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1064, 21))
@@ -396,6 +402,8 @@ class EstyTool(object):
         self.change_password.setText(_translate("MainWindow", "Đổi  Password"))
         self.change_mail_2.setText(_translate("MainWindow", "Đổi  Mail KP"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_gmail), _translate("MainWindow", "Gmail"))
+        self.label_selected.setText(_translate("MainWindow", "0"))
+        self.label_3.setText(_translate("MainWindow", "selected:"))
         self.runningJob = False
         self.indexsuccess = 0
         self.indexerror = 0
@@ -419,7 +427,7 @@ class EstyTool(object):
         self.btn_verify_bank.clicked.connect(self.VerifyBankAction)
         self.btn_check_live.clicked.connect(self.OpenEsty)
         self.table_email.cellClicked.connect(self.getClickedCell)
-        self.table_email.cellClicked.connect(self.getClickedCell)        
+        self.table_mail_change.cellClicked.connect(self.getClickedCell)        
         self.tabWidget.currentChanged.connect(self.changeOptionsTab)
         if os.path.exists("keyproxy.txt"): self.input_proxy.setPlainText(open("keyproxy.txt").read())
 
@@ -436,6 +444,7 @@ class EstyTool(object):
                 self.list_selected.append(self.list_hostmail[row])
             else:
                 self.list_selected.remove(self.list_hostmail[row])
+        self.label_selected.setText(f"<p><span> {len(self.list_selected)} </span></p>")        
             
     def closeEvent(self, event):
         sys.exit()
@@ -465,6 +474,7 @@ class EstyTool(object):
             self.label_success.setText(f"<p><span style=\" color:#00aa00;\"> {self.indexsuccess} </span></p>")
             self.label_error.setText(f"<p><span style=\" color:#ff0000;\"> {self.indexerror} </span></p>")
             self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Chưa chạy </span></p>")
+            self.label_selected.setText(f"<p><span> {len(self.list_selected)} </span></p>")   
             
             if len(self.LD_link.text()) <= 1 or not os.path.exists(self.LD_link.text()):
                 self.Mesagebox(text="Chọn file dữ liệu !")
@@ -625,6 +635,7 @@ class EstyTool(object):
             if (self.index == len(self.list_hostmail) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)):
                 self.runningJob = False
                 self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
+            if "|" in status and (status.split("|")[1] == 'True' or status.split("|")[0] == 'True'):
                 dataGmail = list(self.retriveTableDataGmail())
                 dataSave = list(self.retriveTableData())
                 if os.path.exists(fr'{self.LD_link.text().replace(".txt", "")}_changemail_finished.txt'):
@@ -641,14 +652,19 @@ class EstyTool(object):
                                     str += f"|{proxy}"
                                 else: str += proxy
                         elif index == 4: # Name
-                            str += f"|{i.split(' ')[0]} {i.split(' ')[1]}"
                             try:
-                                str += f"|{i.split(' ')[2]} {i.split(' ')[3]}"
+                                str += f"|{i.split(' ')[0]} {i.split(' ')[1]}"
+                                try:
+                                    str += f"|{i.split(' ')[2]} {i.split(' ')[3]}"
+                                except:
+                                    str += f"|{i.split(' ')[2]}"
                             except:
-                                str += f"|{i.split(' ')[2]}"
+                                str += f"|{i.split(' ')[0]}"
+                                str += f"|{i.split(' ')[1]}"
                         elif index == 16: # card date
-                            str +=  f"|{i.split('/')[0]}"
-                            str +=  f"|{i.split('/')[1]}"
+                            if "/" in i:
+                                str +=  f"|{i.split('/')[0]}"
+                                str +=  f"|{i.split('/')[1]}"
                         else: 
                             if len(str) > 0:
                                 if index == 2 and check == True:
@@ -792,14 +808,15 @@ class EstyTool(object):
                     for vm in self.list_hostmail:
                         index += 1
                         item = next((x for x in self.list_selected if str(vm).split("|")[4] in x), None)
+                        print('index', self.threadIndex, item)
                         if self.runCount < int(self.threadCount.text()) and index > self.threadIndex and item is not None and index > self.lastIndex:
-                            self.lastIndex = index
+                            self.lastIndex = index - 1
                             data = self.list_hostmail[index - 1]
                             self.threadreg = StartQ(self, index - 1, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked())
+                            self.threadreg.start()
                             self.threadreg.show.connect(self.ShowTable)
                             self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
                             self.listthread.append(self.threadreg)
-                            self.threadreg.start()
                             self.runCount += 1
                             self.threadIndex += 1
                             print('self', index, self.runCount)
@@ -854,7 +871,7 @@ class EstyTool(object):
                         index += 1
                         item = next((x for x in self.list_selected if str(vm).split("|")[4] in x), None)
                         if self.runCount < int(self.threadCount.text()) and index > self.threadIndex and item is not None and index > self.lastIndex:
-                            self.lastIndex = index
+                            self.lastIndex = index - 1
                             data = self.list_hostmail[index - 1]
                             changePasswordType = "Random" if self.pass_random.isChecked() else "General" if self.pass_general.isChecked() else "Specific"
                             changeMailType = "Random" if self.gmail_random.isChecked() else "General" if self.gmail_general.isChecked() else "Specific"
@@ -866,26 +883,26 @@ class EstyTool(object):
                                 passwordUpdate = self.input_pass_general.text()
                             else:
                                 passwordUpdate = self.randomword(8)
-                            self.ShowTableMailChange(self.index - 1, 4, passwordUpdate)
+                            self.ShowTableMailChange(index - 1, 4, passwordUpdate)
                             mailUpdate = None
                             if changeMailType == "Specific":
                                 tableData = self.retriveTableDataGmail()
-                                mailUpdate = tableData[self.index - 1][5]
+                                mailUpdate = tableData[index - 1][5]
                             elif changeMailType == "General":
                                 mailUpdate = self.input_gmail_general.text()
                             else:
                                 mailUpdate = f'{str(data.split("|")[4]).split("@")[0]}{self.input_gmail_general.text()}'
-                            self.ShowTableMailChange(self.index - 1, 5, mailUpdate)
+                            self.ShowTableMailChange(index - 1, 5, mailUpdate)
                             keys = self.input_proxy.toPlainText().splitlines()
-                            key = keys[index - 1] if len(keys) >= index - 1 else keys[index % len(keys)]
+                            key = keys[index - 1] if len(keys) > (index - 1) else keys[(index - 1) % len(keys)]
                             self.threadreg = StartQChangeMail(self, index - 1, self.proxy_combobox.currentText(), 
                                                               key, data, self.stepComboBox.currentText(), self.hidden_chrome.isChecked(), self.update_info_mail.isChecked(),
                                                               self.change_password.isChecked(), changePasswordType, passwordUpdate,
                                                               self.change_mail_2.isChecked(), changeMailType, mailUpdate)
+                            self.threadreg.start()
                             self.threadreg.show.connect(self.ShowTableMailChange)
                             self.threadreg.checksuccess.connect(self.ChangeTextSuccessAndError)
                             self.listthread.append(self.threadreg)
-                            self.threadreg.start()
                             self.runCount += 1
                             self.threadIndex += 1
                             self.Delay(1)

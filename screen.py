@@ -281,6 +281,12 @@ class Ui_MainWindow(object):
         self.change_mail_2.setGeometry(QtCore.QRect(330, 45, 81, 17))
         self.change_mail_2.setObjectName("change_mail_2")
         self.tabWidget.addTab(self.tab_gmail, "")
+        self.label_selected = QtWidgets.QLabel(self.centralwidget)
+        self.label_selected.setGeometry(QtCore.QRect(765, 190, 51, 16))
+        self.label_selected.setObjectName("label_selected")
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(700, 190, 61, 16))
+        self.label_3.setObjectName("label_3")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1064, 21))
@@ -399,6 +405,8 @@ class Ui_MainWindow(object):
         self.change_password.setText(_translate("MainWindow", "Đổi  Password"))
         self.change_mail_2.setText(_translate("MainWindow", "Đổi  Mail KP"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_gmail), _translate("MainWindow", "Gmail"))
+        self.label_selected.setText(_translate("MainWindow", "0"))
+        self.label_3.setText(_translate("MainWindow", "selected:"))
 
 
 if __name__ == "__main__":

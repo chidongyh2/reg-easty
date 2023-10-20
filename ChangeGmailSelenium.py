@@ -233,10 +233,10 @@ class ChangeGmailSelenium:
                     self.ref.show.emit(self.index, 6, f"Change gmail thành công")    
 
             self.ref.checksuccess.emit(True, self.index, f"{str(changePassWord)}|{str(changeMail)}")  
-
-        if checkLogin == False:
+        else:
             self.ref.show.emit(self.index, 6, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "register")  
+        self.ref.checksuccess.emit(True, self.index, f"True|{str(changeMail)}")  
         #protected account
         time.sleep(1)
         if self.hiddenBrowser == True:

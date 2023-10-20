@@ -770,9 +770,8 @@ class GmailSelenium:
         options.add_experimental_option("excludeSwitches", ["enable automation"])
         options_seleniumWire = {
             'proxy': {
-                'https': f'https://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
-                'http': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
-                'verify_ssl': False,
+                'https': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
+                'http': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}'
             }
         }
         self.driver = webdriver.Chrome(options=options, seleniumwire_options=options_seleniumWire)
@@ -816,9 +815,7 @@ class GmailSelenium:
             else:
                 self.ref.show.emit(self.index, 21, f"Login easty thất bại")
                 self.ref.checksuccess.emit(False, self.index, "register")
-            
-
-        if checkLogin == False:
+        else:
             self.ref.show.emit(self.index, 21, f"Login gmail thất bại")
             self.ref.checksuccess.emit(False, self.index, "register")  
         #protected account
