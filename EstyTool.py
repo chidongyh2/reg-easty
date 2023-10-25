@@ -156,7 +156,7 @@ class EstyTool(object):
         self.table_mail_change.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.table_mail_change.setShowGrid(True)
         self.table_mail_change.setObjectName("table_mail_change")
-        self.table_mail_change.setColumnCount(7)
+        self.table_mail_change.setColumnCount(9)
         self.table_mail_change.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.table_mail_change.setHorizontalHeaderItem(0, item)
@@ -172,6 +172,10 @@ class EstyTool(object):
         self.table_mail_change.setHorizontalHeaderItem(5, item)
         item = QtWidgets.QTableWidgetItem()
         self.table_mail_change.setHorizontalHeaderItem(6, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.table_mail_change.setHorizontalHeaderItem(7, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.table_mail_change.setHorizontalHeaderItem(8, item)
         self.table_mail_change.horizontalHeader().setDefaultSectionSize(170)
         self.table_mail_change.verticalHeader().setStretchLastSection(True)
         self.tab_easty_data.addTab(self.tab_change_mail, "")
@@ -294,7 +298,7 @@ class EstyTool(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tab_easty_data.setCurrentIndex(0)
+        self.tab_easty_data.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -370,6 +374,10 @@ class EstyTool(object):
         item.setText(_translate("MainWindow", "New Mail KP"))
         item = self.table_mail_change.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "Status"))
+        item = self.table_mail_change.horizontalHeaderItem(7)
+        item.setText(_translate("MainWindow", "ChangePassStatus"))
+        item = self.table_mail_change.horizontalHeaderItem(8)
+        item.setText(_translate("MainWindow", "ChangeMailStatus"))
         self.tab_easty_data.setTabText(self.tab_easty_data.indexOf(self.tab_change_mail), _translate("MainWindow", "Change mail"))
         self.btn_stop.setText(_translate("MainWindow", "Stop"))
         self.btn_start.setText(_translate("MainWindow", "Start"))
@@ -419,6 +427,7 @@ class EstyTool(object):
         self.run_option = 0
         self.row_selected = None
         self.list_selected = []
+        self.list_selected_run = []
         self.row_index = None
         self.btn_load.clicked.connect(self.LoadHotMail)
         self.btn_LD_link.clicked.connect(self.FileDialogLD)
@@ -469,6 +478,7 @@ class EstyTool(object):
             self.indexerror = 0
             self.listthread = []
             self.list_selected = []
+            self.list_selected_run = []
             self.row_selected = None
             self.threadreg = None
             self.label_success.setText(f"<p><span style=\" color:#00aa00;\"> {self.indexsuccess} </span></p>")
@@ -635,7 +645,7 @@ class EstyTool(object):
             if (self.index == len(self.list_hostmail) or (self.threadIndex == len(self.list_selected) and len(self.list_selected) > 0)):
                 self.runningJob = False
                 self.label_running_status.setText(f"<p><span style=\" color:#00aa00;\"> Hoàn thành </span></p>")
-            if "|" in status and (status.split("|")[1] == 'True' or status.split("|")[0] == 'True'):
+            if "|" in status:
                 dataGmail = list(self.retriveTableDataGmail())
                 dataSave = list(self.retriveTableData())
                 if os.path.exists(fr'{self.LD_link.text().replace(".txt", "")}_changemail_finished.txt'):
@@ -667,26 +677,10 @@ class EstyTool(object):
                                 str +=  f"|{i.split('/')[1]}"
                         else: 
                             if len(str) > 0:
-                                if index == 2 and check == True:
-                                    if status.split("|")[0] == 'True': #password success
-                                        if self.change_password.isChecked():
-                                            if self.pass_general.isChecked():
-                                                #pass chung
-                                                str += f"|{self.input_pass_general.text()}"
-                                            if self.pass_random.isChecked() or self.pass_specific.isChecked():
-                                                str += f"|{dataGmail[rowIndex][4]}"
-                                    else:
-                                        str += f"|{i}"
-                                elif index == 3 and check == True:                    
-                                    if status.split("|")[1] == 'True': #mail success
-                                        if self.change_mail_2.isChecked():
-                                            if self.gmail_general.isChecked():
-                                                #mail chung
-                                                str += f"|{self.input_gmail_general.text()}"
-                                            if self.gmail_random.isChecked() or self.gmail_specific.isChecked():
-                                                str += f"|{dataGmail[rowIndex][5]}"
-                                    else:
-                                        str += f"|{i}"
+                                if index == 2 and dataGmail[rowIndex][7] == 'True': # password
+                                    str += f"|{dataGmail[rowIndex][4]}"
+                                elif index == 3 and dataGmail[rowIndex][8] == 'True':  #email                   
+                                    str += f"|{dataGmail[rowIndex][5]}"
                                 else:
                                     str += f"|{i}"
                             else: str += i
@@ -764,6 +758,11 @@ class EstyTool(object):
             self.threadreg = None
             self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
             self.runningJob = True
+            if len(self.list_selected) > 0:
+                for mail in self.list_hostmail:
+                    item = next((x for x in self.list_selected if str(mail).split("|")[4] in x), None)
+                    if item is not None:
+                        self.list_selected_run.append(item)
             self.VerifyBank()
 
     def StartRegAction(self):
@@ -779,6 +778,11 @@ class EstyTool(object):
             self.threadreg = None
             self.label_running_status.setText(f"<p><span style=\" color:#ff0000;\"> Đang chạy... </span></p>")
             self.runningJob = True
+            if len(self.list_selected) > 0:
+                for mail in self.list_hostmail:
+                    item = next((x for x in self.list_selected if str(mail).split("|")[4] in x), None)
+                    if item is not None:
+                        self.list_selected_run.append(item)
             self.StartReg()
 
     def randomword(self, length):
@@ -786,8 +790,9 @@ class EstyTool(object):
         return str(''.join(random.choice(letters) for i in range(length))).upper()
 
     def StartReg(self):
+        print('self.list_selected_run', len(self.list_selected_run))
         if self.run_option == 0: # run easty
-            if self.list_selected is None or len(self.list_selected) == 0:
+            if self.list_selected_run is None or len(self.list_selected_run) == 0:
                 if len(self.list_hostmail) > self.index:
                     for vm in self.list_hostmail:
                         if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
@@ -803,11 +808,11 @@ class EstyTool(object):
                             print('self', self.index, self.runCount)
                             self.Delay(self.delayLD_input.value())
             else:
-                if len(self.list_selected) > self.threadIndex:
+                if len(self.list_selected_run) > self.threadIndex:
                     index = 0
                     for vm in self.list_hostmail:
                         index += 1
-                        item = next((x for x in self.list_selected if str(vm).split("|")[4] in x), None)
+                        item = next((x for x in self.list_selected_run if str(vm).split("|")[4] in x), None)
                         print('index', self.threadIndex, item)
                         if self.runCount < int(self.threadCount.text()) and index > self.threadIndex and item is not None and index > self.lastIndex:
                             self.lastIndex = index - 1
@@ -822,7 +827,7 @@ class EstyTool(object):
                             print('self', index, self.runCount)
                             self.Delay(self.delayLD_input.value())
         else: #run change mail
-            if self.list_selected is None or len(self.list_selected) == 0:
+            if self.list_selected_run is None or len(self.list_selected_run) == 0:
                 if len(self.list_hostmail) > self.index:
                     for vm in self.list_hostmail:
                         if self.runningJob == True and self.runCount < int(self.threadCount.text()) and len(self.list_hostmail) > self.index:
@@ -865,11 +870,11 @@ class EstyTool(object):
                             print('self', self.index, self.runCount)
                             self.Delay(self.delayLD_input.value())
             else:
-                if len(self.list_selected) > self.threadIndex:
+                if len(self.list_selected_run) > self.threadIndex:
                     index = 0
                     for vm in self.list_hostmail:
                         index += 1
-                        item = next((x for x in self.list_selected if str(vm).split("|")[4] in x), None)
+                        item = next((x for x in self.list_selected_run if str(vm).split("|")[4] in x), None)
                         if self.runCount < int(self.threadCount.text()) and index > self.threadIndex and item is not None and index > self.lastIndex:
                             self.lastIndex = index - 1
                             data = self.list_hostmail[index - 1]

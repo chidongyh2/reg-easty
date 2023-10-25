@@ -9,6 +9,8 @@ from colored import fg, bg, attr  # pip install colored
 import os
 import random, string, datetime
 from seleniumwire import webdriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 # import undetected_chromedriver as uc
 class GmailSelenium:
     ref = None
@@ -121,11 +123,26 @@ class GmailSelenium:
     def loginEasty(self):
         try:
             self.driver.get("https://www.etsy.com/")
-            time.sleep(15)
+            time.sleep(30)
             try:
+                try:
+                    WebDriverWait.until(EC.alert_is_present())
+                    self.driver.switch_to.alert.accept()
+                    for handle in self.driver.window_handles:
+                        print('handle', handle)
+                except: pass
+                try:
+                    if self.driver.find_element("xpath", '//*[@id="credential_picker_container"]/iframe'):
+                        self.driver.switch_to.frame(self.driver.find_element("xpath", '//*[@id="credential_picker_container"]/iframe'))
+                    if self.driver.find_element('xpath', '//*[@id="continue-as"]'):
+                        self.driver.find_element('xpath', '//*[@id="continue-as"]').click()
+                        time.sleep(5)
+                        return True
+                except: pass
                 main_page = self.driver.current_window_handle
-                self.driver.find_element('xpath','/html/body/div[2]/header/div[4]/nav/ul/li[1]/button').click()
-                time.sleep(20)
+                self.driver.find_element('xpath','//*[@id="gnav-header-inner"]/div[3]/nav/ul/li[1]/button').click()
+                time.sleep(30)
+                
                 try:
                     self.driver.find_element('xpath','//*[@id="join-neu-form"]/div[3]/div[1]/div/button').click()
                 except:
@@ -139,7 +156,7 @@ class GmailSelenium:
                 self.driver.switch_to.window(login_page)
                 mail =  self.driver.find_element('xpath','//*[@id="view_container"]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div/div/ul/li[1]/div')
                 mail.click()
-                time.sleep(20)
+                time.sleep(30)
                 # change control to main page
                 self.driver.switch_to.window(main_page)
                 return True

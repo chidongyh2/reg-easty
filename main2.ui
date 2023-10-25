@@ -209,7 +209,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -484,6 +484,16 @@
       <column>
        <property name="text">
         <string>Status</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ChangePassStatus</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ChangeMailStatus</string>
        </property>
       </column>
      </widget>

@@ -212,8 +212,8 @@ class ChangeGmailSelenium:
         self.driver = webdriver.Chrome(options=options)
         time.sleep(3)
         checkLogin = self.login()
-        changePassWord = False
-        changeMail = False
+        changePassWord = True
+        changeMail = True
         if checkLogin == True:
             self.ref.show.emit(self.index, 6, f"Login gmail thành công")
             if self.changeInfoMail == True:
@@ -225,13 +225,15 @@ class ChangeGmailSelenium:
             if self.changePassword == True:
                 changePassWord = self.changePasswordFunc()
                 if changePassWord == True:
-                    self.ref.show.emit(self.index, 6, f"Change pass thành công")    
+                    self.ref.show.emit(self.index, 6, f"Change pass thành công") 
+                    self.ref.show.emit(self.index, 7, 'True')   
 
             if self.changeMail == True:
                 changeMail = self.changeMailFunc()
                 if changeMail == True:
                     self.ref.show.emit(self.index, 6, f"Change gmail thành công")    
-
+                    self.ref.show.emit(self.index, 8, 'True')
+            
             self.ref.checksuccess.emit(True, self.index, f"{str(changePassWord)}|{str(changeMail)}")  
         else:
             self.ref.show.emit(self.index, 6, f"Login gmail thất bại")
