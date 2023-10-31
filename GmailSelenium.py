@@ -55,6 +55,7 @@ class GmailSelenium:
         CityIP = None
         StateIP = None
         CountryIP = None
+        requested = False
         
     def login(self):
         try:
@@ -727,6 +728,7 @@ class GmailSelenium:
         self.StateIP = self.driver.find_element('xpath', '/html/body/div[1]/div[3]/div[2]/table/tbody/tr[6]/td[2]').text
         self.CountryIP = self.driver.find_element('xpath', '/html/body/div[1]/div[3]/div[2]/table/tbody/tr[5]/td[2]').text
         print(self.CityIP)
+        
     def requestKhang(self):
         try:
             self.getLocationAddress()
@@ -740,6 +742,7 @@ class GmailSelenium:
             time.sleep(20)
             try:
                 if self.driver.find_element('xpath', '//*[@id="content"]/div[1]/h2').text == 'Your appeal has been submitted':
+                    self.requested = True
                     return True
             except:pass
             time.sleep(2)
@@ -772,10 +775,30 @@ class GmailSelenium:
                 if self.driver.find_element('id', "appeals-submit-button"):
                     return False
             except:
-                
                 return True
         except:
             return False
+
+    def requestKhangResponse(self):
+        self.driver.get("https://www.etsy.com/your/shops/me/dashboard")
+        time.sleep(30)
+        #need check bot hum
+        self.driver.find_element("xpath", "/html/body/main/div[2]/div/table/tbody/tr/td[1]/a").click() # to request
+        time.sleep(10)
+        #need check bot
+       
+        checkHaveResponse = False
+        try:
+            if self.driver.find_element("xpath", '//*[@id="content"]/table/tbody/tr/td[2]'):
+                checkHaveResponse = True
+        except:
+            checkHaveResponse = False
+            
+        if checkHaveResponse == True:
+            self.driver.find_element("id", 'request_comment_body').send_keys()
+            time.sleep(2)
+            self.driver.find_element("id", '//*[@id="content"]/form/div/div/div[2]/div[2]/button').click()
+            time.sleep(3)
     
     def run(self):
         options = webdriver.ChromeOptions()
@@ -787,8 +810,7 @@ class GmailSelenium:
         options.add_experimental_option("excludeSwitches", ["enable automation"])
         options_seleniumWire = {
             'proxy': {
-                'https': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}',
-                'http': f'http://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}'
+                'https': f'https://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}'
             }
         }
         self.driver = webdriver.Chrome(options=options, seleniumwire_options=options_seleniumWire)
@@ -822,9 +844,13 @@ class GmailSelenium:
                     #request kháng
                     requestKhang = self.requestKhang()
                     if requestKhang == True:
-                        self.ref.show.emit(self.index, 19, f"Đã gửi")
-                        self.ref.show.emit(self.index, 21, f"Đã gửi và chờ response")
-                        self.ref.checksuccess.emit(True, self.index, "RequestKhang")
+                        if self.requested == False:
+                            self.ref.show.emit(self.index, 19, f"Đã gửi")
+                            self.ref.show.emit(self.index, 21, f"Đã gửi và chờ response")
+                            self.ref.checksuccess.emit(True, self.index, "RequestKhang")
+                        else:
+                            # start response
+                            requestKhangResponse = self.requestKhangResponse()
                     else:
                         self.ref.show.emit(self.index, 19, f"Lỗi gửi")
                         self.ref.show.emit(self.index, 21, f"Lỗi gửi")
