@@ -1,4 +1,5 @@
 
+
 import random
 import time
 #from selenium import webdriver
@@ -737,6 +738,12 @@ class GmailSelenium:
             time.sleep(20) 
             data = self.driver.find_element('xpath', "//*[contains(@id, 'wt-banner')]/div/div[1]/div[2]/div/p[1]")
             print(data)
+            try:
+                if 'received your appeal' in self.driver.find_element('xpath', "//*[contains(@id, 'wt-banner')]/div/div[1]/div[2]/div/p[1]").text:
+                    print('dzo here')
+                    self.requested = True
+                    return True
+            except:pass
             self.driver.find_element('xpath', "//*[contains(@id, 'wt-banner')]/div/div[2]/a[2]")
             self.driver.get("https://www.etsy.com/appeals")
             time.sleep(20)
@@ -780,25 +787,49 @@ class GmailSelenium:
             return False
 
     def requestKhangResponse(self):
-        self.driver.get("https://www.etsy.com/your/shops/me/dashboard")
+        self.driver.get("https://help.etsy.com/hc/en-us/requests?segment=selling")
         time.sleep(30)
+        #pass verify
+        try:
+            if self.driver.find_element("xpath", '//*[@id="turnstile-wrapper"]/div/iframe'):
+                self.driver.switch_to.frame(self.driver.find_element("xpath", '//*[@id="turnstile-wrapper"]/div/iframe'))
+                time.sleep(3)
+                self.driver.find_element('xpath', '//*[@id="challenge-stage"]/div/label/input').click()
+                time.sleep(60)
+        except: pass
         #need check bot hum
+        if self.driver.find_element("xpath", '//*[@id="turnstile-wrapper"]/div/iframe'):
+            return False
         self.driver.find_element("xpath", "/html/body/main/div[2]/div/table/tbody/tr/td[1]/a").click() # to request
-        time.sleep(10)
+        time.sleep(8)
         #need check bot
-       
         checkHaveResponse = False
         try:
             if self.driver.find_element("xpath", '//*[@id="content"]/table/tbody/tr/td[2]'):
                 checkHaveResponse = True
         except:
-            checkHaveResponse = False
-            
+            pass
+        try:
+            if self.driver.find_element("xpath", '//*[@id="content"]/table/tbody/tr/td[4]'):
+                checkHaveResponse = True
+        except:
+            pass 
+        try:
+            if self.driver.find_element("xpath", '//*[@id="content"]/table/tbody/tr/td[6]'):
+                checkHaveResponse = True
+        except:
+            pass
+                            
         if checkHaveResponse == True:
-            self.driver.find_element("id", 'request_comment_body').send_keys()
+            question3 = open('source-response.txt', 'r')
+            data_question3 = question3.readlines()
+            self.driver.find_element("id", 'request_comment_body').send_keys((f"{str(data_question3[random.randrange(0,len(data_question3))])}"))
             time.sleep(2)
             self.driver.find_element("id", '//*[@id="content"]/form/div/div/div[2]/div[2]/button').click()
             time.sleep(3)
+            return True
+        else:
+            return False
     
     def run(self):
         options = webdriver.ChromeOptions()
@@ -806,29 +837,31 @@ class GmailSelenium:
         options.add_argument('--disable-blink-features=AutomationControlled')
         #options.add_argument('--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints')
         options.add_experimental_option("useAutomationExtension", False)
-        options.add_experimental_option("excludeSwitches",["enable logging"])
-        options.add_experimental_option("excludeSwitches", ["enable automation"])
+        options.add_experimental_option("excludeSwitches",["enable-logging"])
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        
         options_seleniumWire = {
             'proxy': {
                 'https': f'https://{self.ProxyUser}:{self.ProxyPassword}@{self.Proxy}:{self.ProxyPort}'
             }
         }
         self.driver = webdriver.Chrome(options=options, seleniumwire_options=options_seleniumWire)
+        self.driver.set_window_size(1024, 1080)
         #self.driver.delete_all_cookies()
         time.sleep(3)
         checkLogin = self.login()
         if checkLogin == True:
-            self.ref.show.emit(self.index, 21, f"Login gmail thành công")
+            self.ref.show.emit(self.index, 21, f"Login gmail success")
             loginEasty = self.loginEasty()
             if loginEasty == True:
-                self.ref.show.emit(self.index, 21, f"Login easty thành công")
+                self.ref.show.emit(self.index, 21, f"Login easty success")
                 if self.runType == 'AddName' or self.runType == 'CreateShop' or self.runType == 'Full':
                     registerShop = self.registerShopEasty()
                     if registerShop == True:
                         self.ref.checksuccess.emit(True, self.index, "register")
 
                     else: 
-                        self.ref.show.emit(self.index, 21, f"Đăng ký tài khoản không thành công vui lòng kiểm tra lại")
+                        self.ref.show.emit(self.index, 21, f"Register fail")
                         self.ref.checksuccess.emit(False, self.index, "register")
                 elif self.runType == 'Login':
                     self.ref.checksuccess.emit(True, self.index, "register")
@@ -845,21 +878,29 @@ class GmailSelenium:
                     requestKhang = self.requestKhang()
                     if requestKhang == True:
                         if self.requested == False:
-                            self.ref.show.emit(self.index, 19, f"Đã gửi")
-                            self.ref.show.emit(self.index, 21, f"Đã gửi và chờ response")
+                            self.ref.show.emit(self.index, 19, f"Sended success")
+                            self.ref.show.emit(self.index, 21, f"Sended and wait response")
                             self.ref.checksuccess.emit(True, self.index, "RequestKhang")
                         else:
                             # start response
                             requestKhangResponse = self.requestKhangResponse()
+                            if requestKhangResponse == True:
+                                self.ref.show.emit(self.index, 19, f"answered the question request")
+                                self.ref.show.emit(self.index, 21, f"answered the question và wait response")
+                                self.ref.checksuccess.emit(True, self.index, "RequestKhang")
+                            else:
+                                self.ref.show.emit(self.index, 19, f"don't have response from request")
+                                self.ref.show.emit(self.index, 21, f"don't have response from request")
+                                self.ref.checksuccess.emit(True, self.index, "RequestKhang") 
                     else:
-                        self.ref.show.emit(self.index, 19, f"Lỗi gửi")
-                        self.ref.show.emit(self.index, 21, f"Lỗi gửi")
+                        self.ref.show.emit(self.index, 19, f"Send error")
+                        self.ref.show.emit(self.index, 21, f"Send error")
                         self.ref.checksuccess.emit(False, self.index, "RequestKhang")
             else:
-                self.ref.show.emit(self.index, 21, f"Login easty thất bại")
+                self.ref.show.emit(self.index, 21, f"Login easty fail")
                 self.ref.checksuccess.emit(False, self.index, "register")
         else:
-            self.ref.show.emit(self.index, 21, f"Login gmail thất bại")
+            self.ref.show.emit(self.index, 21, f"Login gmail fail")
             self.ref.checksuccess.emit(False, self.index, "register")  
         #protected account
         time.sleep(1)

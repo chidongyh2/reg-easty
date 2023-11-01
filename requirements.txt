@@ -3,9 +3,9 @@ PyQt5-Qt5
 PyQt5-sip
 pywin32-ctypes
 requests
-selenium
-undetected-chromedriver
 colored
 dload
-selenium_authenticated_proxy
+selenium
 selenium-wire
+undetected-chromedriver
+selenium_stealth
